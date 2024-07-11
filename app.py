@@ -25,7 +25,7 @@ def app():
         """,
                 unsafe_allow_html=True)
 
-    st.image('header.jpg', use_column_width=True)
+    st.image('header/header.jpg', use_column_width=True)
 
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
@@ -34,8 +34,8 @@ def app():
     first_name = st.text_input('First Name')
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
-    
-    
+
+
     # init_date_str = '1960-01-01'
     # init_date_dt = datetime.strptime(init_date_str, "%Y-%m-%d")
 
@@ -138,6 +138,7 @@ def app():
     country_of_issue = st.text_input('Country of issue')
     id_document_reference_number = st.text_input(
         'ID Document Reference Number')
+
     e01_date_of_issue = st.date_input(
     label="Date of Issue",
     value=datetime(2000, 1, 1),  # Default date
@@ -153,7 +154,7 @@ def app():
     max_value=date(2025, 12, 31),  # Maximum selectable date
     help="Choose a date"  # Tooltip text
 )
-    
+
     e01_additional_notes = st.text_area('Additional Notes',
                                       'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
 
@@ -355,17 +356,17 @@ def app():
 
     st.header('Evidenced Qualification Levels')
 
-    
+
     st.subheader('Participant self declaration of highest qualification level')
     participant_options = [
         'Below Level 1', 'Level 1', 'Level 2', 'Level 3', 'Level 4',
         'Level 5 and above', 'No Qualifications'
     ]
 
-    
+
     participant_declaration = st.radio('', participant_options)
 
-    
+
     p58 = '-'
     p59 = '-'
     p60 = '-'
@@ -374,7 +375,7 @@ def app():
     p63 = '-'
     p64 = '-'
 
-    
+
     if participant_declaration == participant_options[0]:
         p58 = 'X'
     elif participant_declaration == participant_options[1]:
@@ -390,7 +391,7 @@ def app():
     elif participant_declaration == participant_options[6]:
         p64 = 'X'
 
-    
+
     st.subheader('Training Providers declaration')
     training_provider_options = [
         'Below Level 1', 'Level 1', 'Level 2', 'Level 3', 'Below Level 4',
@@ -410,7 +411,7 @@ def app():
     p72 = '-'
     justification='-'
 
-    
+
     if training_provider_declaration == training_provider_options[0]:
         p65 = 'X'
     elif training_provider_declaration == training_provider_options[1]:
@@ -555,11 +556,11 @@ def app():
         'ISCED 5 to 8 - BTEC Level 5 or NVQ Level 4, Foundation Degree, BA, MA or equivalent'
     ]
 
-    
+
     education_level = st.selectbox(
         'Select the highest level of education at start', education_options)
 
-    
+
     p93 = '-'
     p94 = '-'
     p95 = '-'
@@ -567,7 +568,7 @@ def app():
     p97 = '-'
     p98 = '-'
 
-    
+
     if education_level == education_options[0]:
         p93 = 'X'
     elif education_level == education_options[1]:
@@ -583,29 +584,29 @@ def app():
 
     st.header('Other Information')
 
-    
+
     st.subheader('Current Job Role and Day to Day Activities')
     job_role_activities = st.text_area(
         'What is your current job role and what are your day to day activities?'
     )
 
-    
+
     st.subheader('Career Aspirations')
     career_aspirations = st.text_area('What are your career aspirations?')
 
-    
+
     st.subheader('Training/Qualifications Needed')
     training_qualifications_needed = st.text_area(
         'What training/qualifications do you need to progress further in your career? (Planned and future training)'
     )
 
-    
+
     st.subheader('Barriers to Achieving Career Aspirations')
     barriers_to_achieving_aspirations = st.text_area(
         'What are the barriers to achieving your career aspirations and goals?'
     )
 
-    
+
     st.subheader('Courses/Programs Available')
     courses_programs_available = st.text_area(
         'What courses/programs/activity are available to you in order to meet your and your employer\'s needs?'
@@ -613,7 +614,7 @@ def app():
 
     st.header('Induction Checklist')
 
-    
+
     funded_by_mayor_of_london = st.checkbox(
         'This programme is funded by the Mayor of London')
     lls_completed = st.checkbox(
@@ -635,20 +636,20 @@ def app():
 
     st.header('Declarations')
 
-    
+
     # st.subheader('Provider Confirmation')
     st.text(
         'We hereby confirm that we have read, understood and agree with the contents of this document, and understand that the programme is funded by the Mayor of London.'
     )
 
-    
+
     st.subheader('Participant Declaration')
     participant_declaration = st.text_area(
         'Participant Declaration',
         'I certify that I have provided all of the necessary information to confirm my eligibility for the Funded Provision.'
     )
 
-    
+
     st.subheader('Participant Signature')
     signature_method = st.radio('Select how the signature has been entered:', [
         'Wet signature of original document',
@@ -847,10 +848,11 @@ def resize_image_to_fit_cell(image_path, max_width, max_height):
         img.thumbnail((max_width, max_height), PILImage.Resampling.LANCZOS)
         return img
 
-        
+
 def replace_placeholders(template_file, modified_file, placeholder_values, signature_path):
     # Copy the template file to a new file
-    shutil.copy(template_file, modified_file)
+    shutil.copyfile(template_file, modified_file)
+
 
     # Load the new copied workbook
     wb = load_workbook(modified_file)
@@ -872,6 +874,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
                         img = XLImage(resized_image_path)
                         sheet.add_image(img, cell.coordinate)
 
+    # Save the workbook
     wb.save(modified_file)
 
     # file download button
