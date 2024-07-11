@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 import re
 from PIL import Image as PILImage
 from openpyxl.drawing.image import Image as XLImage
-
+from datetime import datetime, date
 
 def app():
     st.set_page_config(
@@ -34,7 +34,19 @@ def app():
     first_name = st.text_input('First Name')
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
-    date_of_birth = st.date_input('Date of Birth')
+    
+    
+    # init_date_str = '1960-01-01'
+    # init_date_dt = datetime.strptime(init_date_str, "%Y-%m-%d")
+
+    date_of_birth = st.date_input(
+    label="Select a date",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    key="date_input_widget",  # Unique key for the widget
+    help="Choose a date"  # Tooltip text
+)
 
     st.header('Eligibility Check')
 
@@ -126,11 +138,25 @@ def app():
     country_of_issue = st.text_input('Country of issue')
     id_document_reference_number = st.text_input(
         'ID Document Reference Number')
-    e01_date_of_issue = st.date_input('Date of Issue')
-    e01_date_of_expiry = st.date_input('Date of Expiry')
-    e01_additional_notes = st.text_area(
-        'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)'
-    )
+    e01_date_of_issue = st.date_input(
+    label="Date of Issue",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
+
+    e01_date_of_expiry = st.date_input(
+    label="Date of Expiry",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
+    
+    e01_additional_notes = st.text_area('Additional Notes',
+                                      'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
+
 
     st.header(
         'E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)'
@@ -187,7 +213,13 @@ def app():
         northern_ireland_voters_card = '-'
     e02_other_evidence_text = st.text_input(
         'Other Evidence: Please state type')
-    e02_date_of_issue = st.date_input('Date of Issue of evidence')
+    e02_date_of_issue = st.date_input(
+    label="Date of Issue of evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header(
         'E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months'
@@ -231,7 +263,13 @@ def app():
         homeowner_letter = 'X'
     else:
         homeowner_letter = '-'
-    e03_date_of_issue = st.date_input('Date of Issue evidence')
+    e03_date_of_issue = st.date_input(
+    label="Date of Issue evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
     e03_other_evidence_text = st.text_input(
         'Other Evidence: Please state type ')
 
@@ -288,7 +326,13 @@ def app():
         other_evidence_employed = 'X'
     elif selected_main_option == main_options[6]:
         unemployed = 'X'
-    e04_date_of_issue = st.date_input('Date of Issue   evidence')
+    e04_date_of_issue = st.date_input(
+    label="Date of Issue   evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header('Initial Assessment')
     qualification_or_training = st.checkbox(
@@ -364,10 +408,11 @@ def app():
     p70 = '-'
     p71 = '-'
     p72 = '-'
+    justification='-'
 
     
     if training_provider_declaration == training_provider_options[0]:
-        p65, justification = 'X', 'N/A'
+        p65 = 'X'
     elif training_provider_declaration == training_provider_options[1]:
         p66 = 'X'
     elif training_provider_declaration == training_provider_options[2]:
@@ -383,8 +428,7 @@ def app():
     elif training_provider_declaration == training_provider_options[7]:
         p72 = 'X'
 
-    if participant_declaration != training_provider_declaration:
-        justification = st.text_area(
+    justification = st.text_area(
             'If there is a discrepancy between Participant self declaration and the PLR, please record justification for level to be reported'
         )
 
@@ -592,7 +636,7 @@ def app():
     st.header('Declarations')
 
     
-    st.subheader('Provider Confirmation')
+    # st.subheader('Provider Confirmation')
     st.text(
         'We hereby confirm that we have read, understood and agree with the contents of this document, and understand that the programme is funded by the Mayor of London.'
     )
@@ -625,36 +669,48 @@ def app():
         key="canvas",
     )
 
-    date_signed = st.date_input('Date')
+    date_signed = st.date_input(
+    label="Date",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
-    st.header('Training Provider Declaration')
-    st.text(
-        "I also certify that I have seen and verified the supporting evidence as indicated above, to confirm the Participant eligibility for Funded provision and this specific project."
-    )
+    # st.header('Training Provider Declaration')
+    # st.text(
+    #     "I also certify that I have seen and verified the supporting evidence as indicated above, to confirm the Participant eligibility for Funded provision and this specific project."
+    # )
 
-    provider_name = st.text_input('Name', '')
-    provider_position = st.text_input('Position', '')
+    # provider_name = st.text_input('Name', '')
+    # provider_position = st.text_input('Position', '')
 
-    st.subheader('Signature Method')
-    signature_method_provider = st.radio(
-        'Select how the signature has been entered: ', [
-            'Wet signature of original document',
-            'Inserting image of my signature (email mandate needed)',
-            'Signature software such as Docusign/Adobe Sign',
-            'Email declaration/mandate – this must be attached'
-        ])
+    # st.subheader('Signature Method')
+    # signature_method_provider = st.radio(
+    #     'Select how the signature has been entered: ', [
+    #         'Wet signature of original document',
+    #         'Inserting image of my signature (email mandate needed)',
+    #         'Signature software such as Docusign/Adobe Sign',
+    #         'Email declaration/mandate – this must be attached'
+    #     ])
 
-    provider_signature = st_canvas(
-        fill_color="rgba(255, 255, 255, 1)",  # White with opacity
-        stroke_width=5,
-        stroke_color="rgb(0, 0, 0)",  # Black stroke color
-        background_color="white",  # White background color
-        width=400,
-        height=150,
-        drawing_mode="freedraw",
-        key="canvas_provider",
-    )
-    date_signed_provider = st.date_input('Date ')
+#     provider_signature = st_canvas(
+#         fill_color="rgba(255, 255, 255, 1)",  # White with opacity
+#         stroke_width=5,
+#         stroke_color="rgb(0, 0, 0)",  # Black stroke color
+#         background_color="white",  # White background color
+#         width=400,
+#         height=150,
+#         drawing_mode="freedraw",
+#         key="canvas_provider",
+#     )
+#     date_signed_provider = st.date_input(
+#     label="Date ",
+#     value=datetime(2000, 1, 1),  # Default date
+#     min_value=date(1900, 1, 1),  # Minimum selectable date
+#     max_value=date(2025, 12, 31),  # Maximum selectable date
+#     help="Choose a date"  # Tooltip text
+# )
 
     submit_button = st.button('Submit')
     if submit_button:
