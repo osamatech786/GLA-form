@@ -673,40 +673,40 @@ def app():
     help="Choose a date"  # Tooltip text
 )
 
-    st.header('Training Provider Declaration')
-    st.text(
-        "I also certify that I have seen and verified the supporting evidence as indicated above, to confirm the Participant eligibility for Funded provision and this specific project."
-    )
+    # st.header('Training Provider Declaration')
+    # st.text(
+    #     "I also certify that I have seen and verified the supporting evidence as indicated above, to confirm the Participant eligibility for Funded provision and this specific project."
+    # )
 
-    provider_name = st.text_input('Name', '')
-    provider_position = st.text_input('Position', '')
+    # provider_name = st.text_input('Name', '')
+    # provider_position = st.text_input('Position', '')
 
-    st.subheader('Signature Method')
-    signature_method_provider = st.radio(
-        'Select how the signature has been entered: ', [
-            'Wet signature of original document',
-            'Inserting image of my signature (email mandate needed)',
-            'Signature software such as Docusign/Adobe Sign',
-            'Email declaration/mandate – this must be attached'
-        ])
+    # st.subheader('Signature Method')
+    # signature_method_provider = st.radio(
+    #     'Select how the signature has been entered: ', [
+    #         'Wet signature of original document',
+    #         'Inserting image of my signature (email mandate needed)',
+    #         'Signature software such as Docusign/Adobe Sign',
+    #         'Email declaration/mandate – this must be attached'
+    #     ])
 
-    provider_signature = st_canvas(
-        fill_color="rgba(255, 255, 255, 1)",  # White with opacity
-        stroke_width=5,
-        stroke_color="rgb(0, 0, 0)",  # Black stroke color
-        background_color="white",  # White background color
-        width=400,
-        height=150,
-        drawing_mode="freedraw",
-        key="canvas_provider",
-    )
-    date_signed_provider = st.date_input(
-    label="Date ",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
+#     provider_signature = st_canvas(
+#         fill_color="rgba(255, 255, 255, 1)",  # White with opacity
+#         stroke_width=5,
+#         stroke_color="rgb(0, 0, 0)",  # Black stroke color
+#         background_color="white",  # White background color
+#         width=400,
+#         height=150,
+#         drawing_mode="freedraw",
+#         key="canvas_provider",
+#     )
+#     date_signed_provider = st.date_input(
+#     label="Date ",
+#     value=datetime(2000, 1, 1),  # Default date
+#     min_value=date(1900, 1, 1),  # Minimum selectable date
+#     max_value=date(2025, 12, 31),  # Maximum selectable date
+#     help="Choose a date"  # Tooltip text
+# )
 
     submit_button = st.button('Submit')
     if submit_button:
