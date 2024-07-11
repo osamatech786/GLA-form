@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 import re
 from PIL import Image as PILImage
 from openpyxl.drawing.image import Image as XLImage
-
+from datetime import datetime, date
 
 def app():
     st.set_page_config(
@@ -34,7 +34,19 @@ def app():
     first_name = st.text_input('First Name')
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
-    date_of_birth = st.date_input('Date of Birth')
+    
+    
+    # init_date_str = '1960-01-01'
+    # init_date_dt = datetime.strptime(init_date_str, "%Y-%m-%d")
+
+    date_of_birth = st.date_input(
+    label="Select a date",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    key="date_input_widget",  # Unique key for the widget
+    help="Choose a date"  # Tooltip text
+)
 
     st.header('Eligibility Check')
 
@@ -126,11 +138,21 @@ def app():
     country_of_issue = st.text_input('Country of issue')
     id_document_reference_number = st.text_input(
         'ID Document Reference Number')
-    e01_date_of_issue = st.date_input('Date of Issue')
-    e01_date_of_expiry = st.date_input('Date of Expiry')
-    e01_additional_notes = st.text_area(
-        'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)'
-    )
+    e01_date_of_issue = st.date_input(
+    label="Date of Issue",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
+
+    e01_date_of_expiry = st.date_input(
+    label="Date of Expiry",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header(
         'E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)'
@@ -187,7 +209,13 @@ def app():
         northern_ireland_voters_card = '-'
     e02_other_evidence_text = st.text_input(
         'Other Evidence: Please state type')
-    e02_date_of_issue = st.date_input('Date of Issue of evidence')
+    e02_date_of_issue = st.date_input(
+    label="Date of Issue of evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header(
         'E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months'
@@ -231,7 +259,13 @@ def app():
         homeowner_letter = 'X'
     else:
         homeowner_letter = '-'
-    e03_date_of_issue = st.date_input('Date of Issue evidence')
+    e03_date_of_issue = st.date_input(
+    label="Date of Issue evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
     e03_other_evidence_text = st.text_input(
         'Other Evidence: Please state type ')
 
@@ -288,7 +322,13 @@ def app():
         other_evidence_employed = 'X'
     elif selected_main_option == main_options[6]:
         unemployed = 'X'
-    e04_date_of_issue = st.date_input('Date of Issue   evidence')
+    e04_date_of_issue = st.date_input(
+    label="Date of Issue   evidence",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header('Initial Assessment')
     qualification_or_training = st.checkbox(
@@ -625,7 +665,13 @@ def app():
         key="canvas",
     )
 
-    date_signed = st.date_input('Date')
+    date_signed = st.date_input(
+    label="Date",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     st.header('Training Provider Declaration')
     st.text(
@@ -654,7 +700,13 @@ def app():
         drawing_mode="freedraw",
         key="canvas_provider",
     )
-    date_signed_provider = st.date_input('Date ')
+    date_signed_provider = st.date_input(
+    label="Date ",
+    value=datetime(2000, 1, 1),  # Default date
+    min_value=date(1900, 1, 1),  # Minimum selectable date
+    max_value=date(2025, 12, 31),  # Maximum selectable date
+    help="Choose a date"  # Tooltip text
+)
 
     submit_button = st.button('Submit')
     if submit_button:
