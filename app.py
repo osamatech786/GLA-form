@@ -153,6 +153,10 @@ def app():
     max_value=date(2025, 12, 31),  # Maximum selectable date
     help="Choose a date"  # Tooltip text
 )
+    
+    e01_additional_notes = st.text_area('Additional Notes',
+                                      'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
+
 
     st.header(
         'E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)'
