@@ -632,7 +632,7 @@ def app():
     st.header('Declarations')
 
     
-    st.subheader('Provider Confirmation')
+    # st.subheader('Provider Confirmation')
     st.text(
         'We hereby confirm that we have read, understood and agree with the contents of this document, and understand that the programme is funded by the Mayor of London.'
     )
