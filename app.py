@@ -408,10 +408,11 @@ def app():
     p70 = '-'
     p71 = '-'
     p72 = '-'
+    justification='-'
 
     
     if training_provider_declaration == training_provider_options[0]:
-        p65, justification = 'X', 'N/A'
+        p65 = 'X'
     elif training_provider_declaration == training_provider_options[1]:
         p66 = 'X'
     elif training_provider_declaration == training_provider_options[2]:
@@ -427,8 +428,7 @@ def app():
     elif training_provider_declaration == training_provider_options[7]:
         p72 = 'X'
 
-    if participant_declaration != training_provider_declaration:
-        justification = st.text_area(
+    justification = st.text_area(
             'If there is a discrepancy between Participant self declaration and the PLR, please record justification for level to be reported'
         )
 
