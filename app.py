@@ -35,10 +35,6 @@ def app():
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
 
-
-    # init_date_str = '1960-01-01'
-    # init_date_dt = datetime.strptime(init_date_str, "%Y-%m-%d")
-
     date_of_birth = st.date_input(
     label="Select a date",
     value=datetime(2000, 1, 1),  # Default date
