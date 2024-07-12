@@ -6,6 +6,8 @@ import re
 from PIL import Image as PILImage
 from openpyxl.drawing.image import Image as XLImage
 from datetime import datetime, date
+import smtplib
+from email.message import EmailMessage
 
 def app():
     st.set_page_config(
@@ -805,6 +807,21 @@ def app():
                                     placeholder_values, signature_path, sheet_names)
                 # st.success(f"Template modified and saved as {modified_file}")
                 st.success('Form submitted successfully!')
+
+                # Email
+                # Sender email credentials
+                sender_email = st.secrets["sender_email"]
+                sender_password = st.secrets["sender_password"]
+                
+                receiver_email = sender_email
+                # Email details
+                subject = "GLA Form Submission Received"
+                body = "GLA Form submitted. Please find the attached file."
+                file_path = "Filled_GLA_AEB_start_forms.xlsx" 
+                # Send email with attachment
+                send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
+
+            
             else:
                 st.warning("Please draw your signature.")
 
@@ -831,7 +848,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
 
     # Load the new copied workbook
     wb = load_workbook(modified_file)
-    
+
     for sheet_name in sheet_names:
         sheet = wb[sheet_name]
 
@@ -864,6 +881,35 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
             mime='application/octet-stream'
         )
 
+def send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path):
+    """
+    Send an email to yourself with an attachment.
+
+    Args:
+        sender_email (str): The sender's email address.
+        sender_password (str): The sender's email password.
+        receiver_email (str): The receiver's email address (same as sender's in this case).
+        subject (str): The subject of the email.
+        body (str): The body of the email.
+        file_path (str): The path to the file to be attached.
+    """
+    msg = EmailMessage()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.set_content(body)
+
+    # Read the file and attach it to the email
+    with open(file_path, 'rb') as f:
+        file_data = f.read()
+        file_name = file_path.split('/')[-1]
+        msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+
+    # Use the SMTP server for Microsoft email accounts
+    with smtplib.SMTP('smtp.office365.com', 587) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.send_message(msg)
 
 if __name__ == '__main__':
     app()
