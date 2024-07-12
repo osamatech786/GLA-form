@@ -25,7 +25,7 @@ def app():
         """,
                 unsafe_allow_html=True)
 
-    st.image('header/header.jpg', use_column_width=True)
+    st.image('header/header-GLA.png', use_column_width=True)
 
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
