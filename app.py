@@ -647,12 +647,6 @@ def app():
 
 
     st.subheader('Participant Signature')
-    signature_method = st.radio('Select how the signature has been entered:', [
-        'Wet signature of original document',
-        'Inserting image of my signature (email mandate needed)',
-        'Signature software such as Docusign/Adobe Sign',
-        'Email declaration/mandate – this must be attached'
-    ])
 
     st.text("Signature:")
     participant_signature = st_canvas(
@@ -673,41 +667,6 @@ def app():
     max_value=date(2025, 12, 31),  # Maximum selectable date
     help="Choose a date"  # Tooltip text
 )
-
-    # st.header('Training Provider Declaration')
-    # st.text(
-    #     "I also certify that I have seen and verified the supporting evidence as indicated above, to confirm the Participant eligibility for Funded provision and this specific project."
-    # )
-
-    # provider_name = st.text_input('Name', '')
-    # provider_position = st.text_input('Position', '')
-
-    # st.subheader('Signature Method')
-    # signature_method_provider = st.radio(
-    #     'Select how the signature has been entered: ', [
-    #         'Wet signature of original document',
-    #         'Inserting image of my signature (email mandate needed)',
-    #         'Signature software such as Docusign/Adobe Sign',
-    #         'Email declaration/mandate – this must be attached'
-    #     ])
-
-#     provider_signature = st_canvas(
-#         fill_color="rgba(255, 255, 255, 1)",  # White with opacity
-#         stroke_width=5,
-#         stroke_color="rgb(0, 0, 0)",  # Black stroke color
-#         background_color="white",  # White background color
-#         width=400,
-#         height=150,
-#         drawing_mode="freedraw",
-#         key="canvas_provider",
-#     )
-#     date_signed_provider = st.date_input(
-#     label="Date ",
-#     value=datetime(2000, 1, 1),  # Default date
-#     min_value=date(1900, 1, 1),  # Minimum selectable date
-#     max_value=date(2025, 12, 31),  # Maximum selectable date
-#     help="Choose a date"  # Tooltip text
-# )
 
     submit_button = st.button('Submit')
     if submit_button:
@@ -831,8 +790,11 @@ def app():
             signature_image.save(signature_path)
             # st.success("Signature image saved!")
 
+            # Multi Sheet Support
+            sheet_names = ['Eligibility', 'ILR']
+
             replace_placeholders(template_file, modified_file,
-                                 placeholder_values, signature_path)
+                                 placeholder_values, signature_path, sheet_names)
             # st.success(f"Template modified and saved as {modified_file}")
         else:
             st.warning("Please draw your signature.")
@@ -845,30 +807,31 @@ def resize_image_to_fit_cell(image_path, max_width, max_height):
         return img
 
 
-def replace_placeholders(template_file, modified_file, placeholder_values, signature_path):
+def replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names):
     # Copy the template file to a new file
     shutil.copyfile(template_file, modified_file)
 
-
     # Load the new copied workbook
     wb = load_workbook(modified_file)
-    sheet = wb.active
+    
+    for sheet_name in sheet_names:
+        sheet = wb[sheet_name]
 
-    # Replace placeholders with provided values or images
-    for row in sheet.iter_rows():
-        for cell in row:
-            if isinstance(cell.value, str):
-                for placeholder, value in placeholder_values.items():
-                    # Use regular expressions to find full placeholder word
-                    pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
-                    cell.value = pattern.sub(str(value), cell.value)
-                    if 'p113' in cell.value:
-                        cell.value = cell.value.replace('p113', '')  
-                        resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
-                        resized_image_path = 'resized_signature_image.png'
-                        resized_image.save(resized_image_path)
-                        img = XLImage(resized_image_path)
-                        sheet.add_image(img, cell.coordinate)
+        # Replace placeholders with provided values or images
+        for row in sheet.iter_rows():
+            for cell in row:
+                if isinstance(cell.value, str):
+                    for placeholder, value in placeholder_values.items():
+                        # Use regular expressions to find full placeholder word
+                        pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
+                        cell.value = pattern.sub(str(value), cell.value)
+                        if 'p113' in cell.value:
+                            cell.value = cell.value.replace('p113', '')  
+                            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
+                            resized_image_path = 'resized_signature_image.png'
+                            resized_image.save(resized_image_path)
+                            img = XLImage(resized_image_path)
+                            sheet.add_image(img, cell.coordinate)
 
     # Save the workbook
     wb.save(modified_file)
