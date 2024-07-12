@@ -778,28 +778,46 @@ def app():
             'p114': date_signed,
         }
 
-        # Define input and output paths
-        template_file = "ph gla.xlsx"
-        modified_file = "Filled_GLA_AEB_start_forms.xlsx"
+        # mandatory fields validation
+        exclude_fields = {'p1000', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102'}     # exclude fields
+        mandatory_fields = [f'p{i}' for i in range(1, 151) if f'p{i}' not in exclude_fields]    # define mandatory fields
+        missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
+        if missing_fields:
+            st.warning(f"Please fill out all the fields.")
+            st.text(missing_fields)
+        else:        
+            # Define input and output paths
+            template_file = "ph gla.xlsx"
+            modified_file = "Filled_GLA_AEB_start_forms.xlsx"
 
-        if participant_signature.image_data is not None:
-            # Convert the drawing to a PIL image and save it
-            signature_path = 'signature_image.png'
-            signature_image = PILImage.fromarray(
-                participant_signature.image_data.astype('uint8'), 'RGBA')
-            signature_image.save(signature_path)
-            # st.success("Signature image saved!")
+            if len(participant_signature.json_data['objects']) != 0:
+                # Convert the drawing to a PIL image and save it
+                signature_path = 'signature_image.png'
+                signature_image = PILImage.fromarray(
+                    participant_signature.image_data.astype('uint8'), 'RGBA')
+                signature_image.save(signature_path)
+                # st.success("Signature image saved!")
 
-            # Multi Sheet Support
-            sheet_names = ['Eligibility', 'ILR']
+                # Multi Sheet Support
+                sheet_names = ['Eligibility', 'ILR']
 
-            replace_placeholders(template_file, modified_file,
-                                 placeholder_values, signature_path, sheet_names)
-            # st.success(f"Template modified and saved as {modified_file}")
-        else:
-            st.warning("Please draw your signature.")
+                replace_placeholders(template_file, modified_file,
+                                    placeholder_values, signature_path, sheet_names)
+                # st.success(f"Template modified and saved as {modified_file}")
+                st.success('Form submitted successfully!')
+            else:
+                st.warning("Please draw your signature.")
 
-        st.success('Form submitted successfully!')
+
+#  Custome Functions 
+# ####################################################################################################################################
+def validate_inputs(inputs, mandatory_fields):
+    """Check if all mandatory input fields are filled and return the list of missing fields."""
+    missing_fields = []
+    for key, value in inputs.items():
+        if key in mandatory_fields and (value is None or value == ''):
+            missing_fields.append(key)
+    return missing_fields
 
 def resize_image_to_fit_cell(image_path, max_width, max_height):
     with PILImage.open(image_path) as img:
