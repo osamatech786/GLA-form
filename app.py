@@ -779,7 +779,7 @@ def app():
         }
 
         # mandatory fields validation
-        exclude_fields = {'p1000', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102'}     # exclude fields
+        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103'}     # exclude fields
         mandatory_fields = [f'p{i}' for i in range(1, 151) if f'p{i}' not in exclude_fields]    # define mandatory fields
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
