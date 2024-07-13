@@ -819,7 +819,7 @@ def app():
                 body = "GLA Form submitted. Please find the attached file."
                 file_path = "Filled_GLA_AEB_start_forms.xlsx" 
                 # Send email with attachment
-                send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
+                # send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
 
             
             else:
