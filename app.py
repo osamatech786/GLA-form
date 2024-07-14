@@ -12,7 +12,7 @@ from datetime import date, timedelta
 
 def app():
     st.set_page_config(
-        page_title="Online Form",
+        page_title="Prevista - GLA Form",
         page_icon="📝",
         layout="wide",
         initial_sidebar_state="collapsed",
@@ -1019,11 +1019,13 @@ def app():
 
     date_signed = st.date_input(
     label="Date",
-    value=datetime(2000, 1, 1),  # Default date
+    value=date.today(),  # Default date
     min_value=date(1900, 1, 1),  # Minimum selectable date
     max_value=date(2025, 12, 31),  # Maximum selectable date
     help="Choose a date"  # Tooltip text
 )
+
+# ####################################################################################################################################
 
     submit_button = st.button('Submit')
     if submit_button:
