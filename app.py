@@ -120,39 +120,39 @@ def app():
     ethnicity_48=''
     # Set the corresponding ethnicity variable to 'X'
     if ethnicity_code == 31:
-        ethnicity_31 = 'X'
+        ethnicity_vars['ethnicity_31'] = 'X'
     elif ethnicity_code == 32:
-        ethnicity_32 = 'X'
+        ethnicity_vars['ethnicity_32'] = 'X'
     elif ethnicity_code == 33:
-        ethnicity_33 = 'X'
+        ethnicity_vars['ethnicity_33'] = 'X'
     elif ethnicity_code == 34:
-        ethnicity_34 = 'X'
+        ethnicity_vars['ethnicity_34'] = 'X'
     elif ethnicity_code == 35:
-        ethnicity_35 = 'X'
+        ethnicity_vars['ethnicity_35'] = 'X'
     elif ethnicity_code == 36:
-        ethnicity_36 = 'X'
+        ethnicity_vars['ethnicity_36'] = 'X'
     elif ethnicity_code == 37:
-        ethnicity_37 = 'X'
+        ethnicity_vars['ethnicity_37'] = 'X'
     elif ethnicity_code == 38:
-        ethnicity_38 = 'X'
+        ethnicity_vars['ethnicity_38'] = 'X'
     elif ethnicity_code == 39:
-        ethnicity_39 = 'X'
+        ethnicity_vars['ethnicity_39'] = 'X'
     elif ethnicity_code == 40:
-        ethnicity_40 = 'X'
+        ethnicity_vars['ethnicity_40'] = 'X'
     elif ethnicity_code == 41:
-        ethnicity_41 = 'X'
+        ethnicity_vars['ethnicity_41'] = 'X'
     elif ethnicity_code == 42:
-        ethnicity_42 = 'X'
+        ethnicity_vars['ethnicity_42'] = 'X'
     elif ethnicity_code == 43:
-        ethnicity_43 = 'X'
+        ethnicity_vars['ethnicity_43'] = 'X'
     elif ethnicity_code == 44:
-        ethnicity_44 = 'X'
+        ethnicity_vars['ethnicity_44'] = 'X'
     elif ethnicity_code == 45:
-        ethnicity_45 = 'X'
+        ethnicity_vars['ethnicity_45'] = 'X'
     elif ethnicity_code == 46:
-        ethnicity_46 = 'X'
+        ethnicity_vars['ethnicity_46'] = 'X'
     elif ethnicity_code == 47:
-        ethnicity_47 = 'X'
+        ethnicity_vars['ethnicity_47'] = 'X'
     else:
         ethnicity_48='X'
 
@@ -551,12 +551,14 @@ def app():
         elif unemployment_evidence == "Other (please specify)":
             other_evidence_val = st.text_input("Please specify other evidence")    
 
+    # Initialize economically inactive variables
+    inactive_status_val, inactive_evidence_type_val, inactive_evidence_date_val = '-', '-', '-'
+    
     # Section B - Economically Inactive details
     if "Economically Inactive" in employment_status:
         st.subheader('Section B - Economically Inactive details')
         
-        # Initialize economically inactive variables
-        inactive_status_val, inactive_evidence_type_val, inactive_evidence_date_val = '-', '-', '-'
+        
         inactive_status = st.radio(
             "The Participant is not employed and does not claim benefits at the time of the enrolment.",
             ["Y", "N"]
@@ -568,17 +570,27 @@ def app():
         inactive_evidence_type_val = st.text_input("Type of evidence for Economically Inactive Status including self-declaration statement.")
         inactive_evidence_date_val = st.date_input("Date of issue of evidence")
 
+
+    # Initialize employment detail variables
+    employer_name_val, employer_address_1_val, employer_address_2_val = '', '', ''
+    employer_address_3_val, employer_postcode_val, employer_contact_name_val = '', '', ''
+    employer_contact_position_val, employer_contact_email_val, employer_contact_phone_val = '', '', ''
+    employer_edrs_number_val, living_wage_val, employment_hours_val_0, employment_hours_val_6 = '', '', '', ''
+    claiming_benefits_val, sole_claimant_val, benefits_list_val = '', '', ''
+    other_benefit_val, benefit_claim_date_val = '', ''
+    
+    # Initialize variables for benefits
+    universal_credit_val = ''
+    job_seekers_allowance_val = ''
+    employment_support_allowance_val = ''
+    incapacity_benefit_val = ''
+    personal_independence_payment_val = ''
+
     # Section C - Employment details
     if "Employed" in employment_status:
         st.subheader('Section C - Employment details')
         
-        # Initialize employment detail variables
-        employer_name_val, employer_address_1_val, employer_address_2_val = '', '', ''
-        employer_address_3_val, employer_postcode_val, employer_contact_name_val = '', '', ''
-        employer_contact_position_val, employer_contact_email_val, employer_contact_phone_val = '', '', ''
-        employer_edrs_number_val, living_wage_val, employment_hours_val_0, employment_hours_val_6 = '', '', '', ''
-        claiming_benefits_val, sole_claimant_val, benefits_list_val = '', '', ''
-        other_benefit_val, benefit_claim_date_val = '', ''
+        
 
         employer_name_val = st.text_input("Employer Name")
         employer_address_1_val = st.text_input("Employer Address 1")
@@ -601,16 +613,12 @@ def app():
         claiming_benefits = st.radio("Are you claiming any benefits? If so, please describe below what they are.", ["Y", "N"])
         claiming_benefits_val = 'Y' if claiming_benefits == "Y" else 'N'
 
+        
         if claiming_benefits == "Y":
             sole_claimant = st.radio("Are you the sole claimant of the benefit?", ["Y", "N"])
             sole_claimant_val = 'Y' if sole_claimant == "Y" else 'N'
 
-            # Initialize variables for benefits
-            universal_credit_val = ''
-            job_seekers_allowance_val = ''
-            employment_support_allowance_val = ''
-            incapacity_benefit_val = ''
-            personal_independence_payment_val = ''
+
             # Benefits List Section
             benefits_list = st.multiselect(
                 "Select the benefits you are claiming:",
@@ -1384,23 +1392,23 @@ def app():
             'p4': date_of_birth,
 
             'p118': current_age,
-            'p119': ethnicity_31,
-            'p120': ethnicity_32,
-            'p121': ethnicity_33,
-            'p122': ethnicity_34,
-            'p123': ethnicity_35,
-            'p124': ethnicity_36,
-            'p125': ethnicity_37,
-            'p126': ethnicity_38,
-            'p127': ethnicity_39,
-            'p128': ethnicity_40,
-            'p129': ethnicity_41,
-            'p130': ethnicity_42,
-            'p131': ethnicity_43,
-            'p132': ethnicity_44,
-            'p133': ethnicity_45,
-            'p134': ethnicity_46,
-            'p135': ethnicity_47,
+            'p119': ethnicity_vars['ethnicity_31'],
+            'p120': ethnicity_vars['ethnicity_32'],
+            'p121': ethnicity_vars['ethnicity_33'],
+            'p122': ethnicity_vars['ethnicity_34'],
+            'p123': ethnicity_vars['ethnicity_35'],
+            'p124': ethnicity_vars['ethnicity_36'],
+            'p125': ethnicity_vars['ethnicity_37'],
+            'p126': ethnicity_vars['ethnicity_38'],
+            'p127': ethnicity_vars['ethnicity_39'],
+            'p128': ethnicity_vars['ethnicity_40'],
+            'p129': ethnicity_vars['ethnicity_41'],
+            'p130': ethnicity_vars['ethnicity_42'],
+            'p131': ethnicity_vars['ethnicity_43'],
+            'p132': ethnicity_vars['ethnicity_44'],
+            'p133': ethnicity_vars['ethnicity_45'],
+            'p134': ethnicity_vars['ethnicity_46'],
+            'p135': ethnicity_vars['ethnicity_47'],
             'p136': ethnicity_48,
             'p137': national_insurance_number,
             'p138': house_no_name_street,
@@ -1641,7 +1649,7 @@ def app():
         }
 
         # mandatory fields validation
-        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21'}     # exclude fields
+        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
         mandatory_fields = [f'p{i}' for i in range(1, 151) if f'p{i}' not in exclude_fields]    # define mandatory fields
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
