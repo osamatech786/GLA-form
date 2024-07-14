@@ -35,19 +35,328 @@ def app():
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
 
-    # Form Inputs
+    title = st.radio(
+        "Title",
+        ["Mr", "Mrs", "Miss", "Ms"]
+    )
+
     first_name = st.text_input('First Name')
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
 
+    gender = st.radio("Gender", ["M", "F", "Other"])
+
+    if gender == "Other":
+        other_gender = st.text_input("If Other, please state")
+
     date_of_birth = st.date_input(
-    label="Select a date",
+    label="Date of Birth",
     value=datetime(2000, 1, 1),  # Default date
     min_value=date(1900, 1, 1),  # Minimum selectable date
     max_value=date(2025, 12, 31),  # Maximum selectable date
     key="date_input_widget",  # Unique key for the widget
     help="Choose a date"  # Tooltip text
 )
+    current_age = calculate_age(date_of_birth)
+    current_age_text='Current Age at Start of Programme: '+ str(current_age)
+    st.text(current_age_text)
+
+    ethnicity_options = {
+        'White': {
+            'English/ Welsh/ Scottish/ N Irish/ British': '31',
+            'Irish': '32',
+            'Roma, Gypsy or Irish Traveller': '33',
+            'Any other white background': '34'
+        },
+        'Mixed/ Multiple ethnic group': {
+            'White and Black Caribbean': '35',
+            'White and Black African': '36',
+            'White and Asian': '37',
+            'Any other mixed/ multiple ethnic background': '38'
+        },
+        'Asian/ Asian British': {
+            'Indian': '39',
+            'Pakistani': '40',
+            'Bangladeshi': '41',
+            'Chinese': '42',
+            'Any other Asian background': '43'
+        },
+        'Black/ African/ Caribbean/ Black British': {
+            'African': '44',
+            'Caribbean': '45',
+            'Any Other Black/ African/ Caribbean background': '46'
+        },
+        'Other Ethnic Group': {
+            'Arab': '47',
+            'Any other ethnic group': '98'
+        }
+    }
+
+    ethnicity_category = st.selectbox('Select Ethnicity Category', list(ethnicity_options.keys()))
+    ethnicity = st.selectbox('Select Ethnicity', list(ethnicity_options[ethnicity_category].keys()))
+    ethnicity_code = ethnicity_options[ethnicity_category][ethnicity]
+    st.write(f'Ethnicity Code: {ethnicity_code}')
+
+    national_insurance_number = st.text_input("National Insurance Number")
+
+    house_no_name_street = st.text_input("House No./Name & Street")
+    suburb_village = st.text_input("Suburb / Village")
+    town_city = st.text_input("Town / City")
+    county = st.text_input("County")
+    country_of_domicile = st.text_input("Country of Domicile")
+    current_postcode = st.text_input("Current Postcode")
+    postcode_prior_enrollment = st.text_input("Postcode Prior to Enrolment")
+    email_address = st.text_input("Email Address")
+    primary_telephone_number = st.text_input("Primary Telephone Number")
+    secondary_telephone_number = st.text_input("Secondary Telephone Number")
+    next_of_kin = st.text_input("Next of kin/Emergency contact")
+    emergency_contact_phone_number = st.text_input("Emergency Contact Phone Number")
+
+
+    # Household Situation Section
+    st.header('Household Situation')
+    st.subheader('Please select the most relevant option (place an "x" in ALL relevant boxes)')
+
+    household_options = {
+        '1 - No household member in employment with one or more dependent children': 'JH, JH+DC',
+        '2 - No household member in employment with no dependent children': 'JH',
+        '3 - Participant lives in a single adult household with dependent children': 'SAH+DC',
+        '4 - Learner lives in single unemployed adult household with dependent children': 'JH, SAH+DC',
+        '99 - None of the above apply': 'N/A'
+    }
+
+    household_selections = {}
+    for option, code in household_options.items():
+        household_selections[option] = st.checkbox(option, key=code)
+
+    # Display selected household situations
+    st.subheader('Selected Household Situations:')
+    selected_households = [option for option, selected in household_selections.items() if selected]
+    if selected_households:
+        for selected in selected_households:
+            st.write(selected)
+    else:
+        st.write('No options selected.')
+
+
+    # LLDD, Health Problems, Other Disadvantaged Section
+    st.header('LLDD, Health Problems, Other Disadvantaged')
+
+    # Long term disability, health problem, or learning difficulties
+    st.subheader('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
+    disability = st.radio('Choose the correct option:', ['Y', 'N'])
+
+    # LLDD or Health Problem Types
+    st.subheader('LLDD or Health Problem Type')
+    columns = ['Type', 'Primary', 'Secondary', 'Tertiary']
+    data = [
+        ('Vision impairment (4)', 'vision_primary', 'vision_secondary', 'vision_tertiary'),
+        ('Hearing impairment (5)', 'hearing_primary', 'hearing_secondary', 'hearing_tertiary'),
+        ('Disability affecting mobility (6)', 'mobility_primary', 'mobility_secondary', 'mobility_tertiary'),
+        ('Profound complex disabilities (7)', 'complex_primary', 'complex_secondary', 'complex_tertiary'),
+        ('Social and emotional difficulties (8)', 'social_primary', 'social_secondary', 'social_tertiary'),
+        ('Mental health difficulty (9)', 'mental_primary', 'mental_secondary', 'mental_tertiary'),
+        ('Moderate learning difficulty (10)', 'moderate_primary', 'moderate_secondary', 'moderate_tertiary'),
+        ('Severe learning difficulty (11)', 'severe_primary', 'severe_secondary', 'severe_tertiary'),
+        ('Dyslexia (12)', 'dyslexia_primary', 'dyslexia_secondary', 'dyslexia_tertiary'),
+        ('Dyscalculia (13)', 'dyscalculia_primary', 'dyscalculia_secondary', 'dyscalculia_tertiary'),
+        ('Autism spectrum disorder (14)', 'autism_primary', 'autism_secondary', 'autism_tertiary'),
+        ('Asperger\'s syndrome (15)', 'aspergers_primary', 'aspergers_secondary', 'aspergers_tertiary'),
+        ('Temporary disability after illness (for example post-viral) or accident (16)', 'temporary_primary', 'temporary_secondary', 'temporary_tertiary'),
+        ('Speech, Language and Communication Needs (17)', 'speech_primary', 'speech_secondary', 'speech_tertiary'),
+        ('Other physical disability (18)', 'physical_primary', 'physical_secondary', 'physical_tertiary'),
+        ('Other specific learning difficulty (e.g. Dyspraxia) (19)', 'specific_primary', 'specific_secondary', 'specific_tertiary'),
+        ('Other medical condition (for example epilepsy, asthma, diabetes) (20)', 'medical_primary', 'medical_secondary', 'medical_tertiary'),
+        ('Other learning difficulty (90)', 'other_learning_primary', 'other_learning_secondary', 'other_learning_tertiary'),
+        ('Other disability (97)', 'other_disability_primary', 'other_disability_secondary', 'other_disability_tertiary'),
+        ('Prefer not to say (98)', 'prefer_not_primary', 'prefer_not_secondary', 'prefer_not_tertiary')
+    ]
+
+    for label, primary, secondary, tertiary in data:
+        st.write(f'**{label}**')
+        st.checkbox('Primary', key=primary)
+        st.checkbox('Secondary', key=secondary)
+        st.checkbox('Tertiary', key=tertiary)
+
+    # Additional information that may impact learning
+    additional_info = st.text_area('Is there any other additional information that may impact on your ability to learn?')
+
+    # Other disadvantaged sections
+    st.subheader('Other disadvantaged - Ex Offender?')
+    ex_offender = st.radio('', ['Y', 'N', 'Choose not to say'], key='ex_offender')
+
+    st.subheader('Other disadvantaged - Homeless?')
+    homeless = st.radio('', ['Y', 'N', 'Choose not to say'], key='homeless')
+
+    # Referral Source Section
+    st.header('Referral Source')
+
+    # Creating columns for referral source options
+    col1, col2, col3, col4 = st.columns(4)
+
+    # Adding checkboxes for each referral source option
+    with col1:
+        internally_sourced = st.checkbox('Internally sourced', key='internally_sourced_1')
+        recommendation = st.checkbox('Recommendation')
+        event = st.checkbox('Event (please specify)')
+
+    with col2:
+        self_referral = st.checkbox('Self Referral')
+        family_friends = st.checkbox('Family/ Friends')
+        other = st.checkbox('Other (please specify)')
+
+    with col3:
+        website_1 = st.checkbox('Website', key='website_1')
+        internally_sourced_2 = st.checkbox('Internally sourced', key='internally_sourced_2')
+
+    with col4:
+        promotional_material = st.checkbox('Promotional material')
+        website_2 = st.checkbox('Website', key='website_2')
+
+    # Text inputs for 'Event (please specify)' and 'Other (please specify)' if checked
+    if event:
+        event_specify = st.text_input('Please specify the event', key='event_specify')
+
+    if other:
+        other_specify = st.text_input('Please specify other source', key='other_specify')
+
+
+    # Employment and Monitoring Information Section
+    st.header('Employment and Monitoring Information')
+
+    # Participant Employment Status
+    st.subheader('Participant Employment Status (place an X in the applicable box)')
+    employment_status = st.radio(
+        "Select your employment status:",
+        [
+            "Unemployed (looking for work and available to start work) -> go to section A",
+            "Economically Inactive (not looking for work and not available to start work) -> Go to section B",
+            "Employed (including self-employed) -> go to section C"
+        ]
+    )
+
+    # Section A - Unemployment details
+    if "Unemployed" in employment_status:
+        st.subheader('Section A - Unemployment details')
+        st.text("Where a participant’s employment status is long-term unemployed proof of both unemployment and the length of unemployment must be obtained.")
+        unemployment_duration = st.radio("If you are not working, how long have you been without work?", ["Up to 12 months", "12 months or longer"])
+        st.write("Evidence of unemployment status (for more information look Start-Eligibility Evidence list tab)")
+        unemployment_evidence = st.selectbox(
+            "Select evidence type:",
+            [
+                "A Letter or Document from JCP or DWP",
+                "A written referral from a careers service",
+                "Third Party Verification or Referral form",
+                "Other (please specify)"
+            ]
+        )
+        if unemployment_evidence == "Other (please specify)":
+            other_evidence = st.text_input("Please specify other evidence")
+
+    # Section B - Economically Inactive details
+    if "Economically Inactive" in employment_status:
+        st.subheader('Section B - Economically Inactive details')
+        inactive_status = st.radio(
+            "The Participant is not employed and does not claim benefits at the time of the enrolment.",
+            ["Y", "N"]
+        )
+        inactive_evidence_type = st.text_input("Type of evidence for Economically Inactive Status including self-declaration statement.")
+        inactive_evidence_date = st.date_input("Date of issue of evidence")
+
+    # Section C - Employment details
+    if "Employed" in employment_status:
+        st.subheader('Section C - Employment details')
+        employer_name = st.text_input("Employer Name")
+        employer_address_1 = st.text_input("Employer Address 1")
+        employer_address_2 = st.text_input("Employer Address 2")
+        employer_address_3 = st.text_input("Employer Address 3")
+        employer_postcode = st.text_input("Employer Postcode")
+        employer_contact_name = st.text_input("Main Employer Contact Name")
+        employer_contact_position = st.text_input("Contact Position")
+        employer_contact_email = st.text_input("Contact Email Address")
+        employer_contact_phone = st.text_input("Contact Telephone Number")
+        employer_edrs_number = st.text_input("Employer EDRS number")
+
+        living_wage = st.radio("Do you earn more than the National Living Wage of £20,319.00 pa (£10.42ph for 37.5 hrs pw)?", ["Y", "N"])
+        employment_hours = st.radio("Employment Hours (place an X in the applicable box)", ["0-15 hrs per week", "16+ hrs per week"])
+
+        claiming_benefits = st.radio("Are you claiming any benefits? If so, please describe below what they are.", ["Y", "N"])
+        if claiming_benefits == "Y":
+            sole_claimant = st.radio("Are you the sole claimant of the benefit?", ["Y", "N"])
+            benefits_list = st.multiselect(
+                "Select the benefits you are claiming:",
+                [
+                    "Universal Credit (UC)",
+                    "Job Seekers Allowance (JSA)",
+                    "Employment and Support Allowance (ESA)",
+                    "Incapacity Benefit (or any other sickness related benefit)",
+                    "Personal Independence Payment (PIP)",
+                    "Other - please state"
+                ]
+            )
+            if "Other - please state" in benefits_list:
+                other_benefit = st.text_input("Please state other benefit")
+            benefit_claim_date = st.date_input("From what date has the above claim been in effect?")
+
+
+    # # Detailed Learning Plan Section
+    # st.header('Detailed Learning Plan')
+
+    # qualification_reference = st.text_input("Qualification Reference")
+    # region_of_work = st.text_input("Region of Work")
+    # qualification_course_title = st.text_input("Qualification/Course/Unit Title/Non-Regulated activity")
+    # awarding_body = st.text_input("Awarding Body")
+
+    # GLH = st.text_input("GLH")
+
+    # benefit_to_you = st.text_area("What is the benefit to you in completing this learning aim? Please be specific")
+
+    # planned_start_date = st.date_input("Planned Start Date")
+    # planned_end_date = st.date_input("Planned End Date", help="Note: Actual End Date to be recorded on 'Outcome and Progression' form at the end of the programme")
+    # delivery_postcode = st.text_input("Delivery Postcode")
+    # date_of_first_review = st.date_input("Date of first review")
+
+    # st.subheader("Progression - Indicate below the progression planned for this participant when they have completed all training")
+    # progression_options = st.multiselect(
+    #     "Select progression options:",
+    #     [
+    #         "Progression within Work",
+    #         "Progression into Further Education or Training",
+    #         "Progression to Apprenticeship",
+    #         "Progression into employment"
+    #     ]
+    # )
+
+    # progression_aim = st.text_area("Please detail your progression aim")
+
+    # st.subheader("Social Outcomes - How do you rate yourself now out of 5 for the below. 5= Great 1= Poor")
+
+    # health_and_well_being = st.slider("Health and well being", 1, 5, 1)
+    # social_integration = st.slider("Social integration", 1, 5, 1)
+    # learner_self_efficacy = st.slider("Learner self-efficacy", 1, 5, 1)
+    # participation_in_volunteering = st.slider("Participation in volunteering", 1, 5, 1)
+
+
+    # # Privacy and Data Protection Information Section
+    # st.header('Privacy and Data Protection Information')
+
+    # # Display image
+    # st.image("Privacy and Data Protection Information.jpg")
+
+    # st.write("Add Y or N for any of the following boxes if you AGREE to be contacted; tick how you wish to be contacted")
+
+    # # Contact preferences
+    # contact_courses = st.radio("About courses/learning opportunities (fill in all boxes with either Y or N)", options=["Y", "N"])
+    # contact_surveys = st.radio("For surveys & research", options=["Y", "N"])
+    # contact_phone = st.radio("Phone", options=["Y", "N"])
+    # contact_email = st.radio("Email", options=["Y", "N"])
+    # contact_post = st.radio("Post", options=["Y", "N"])
+
+
+
+
+
+
 
     # st.header('Eligibility Check')
 
@@ -73,7 +382,9 @@ def app():
 
     st.header('E01: Right to Live and Work in the UK')
 
+    # var initialize
     hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', ''
+    not_nationality, passport_non_eu, letter_uk_immigration, passport_endorsed, identity_card, country_of_issue, id_document_reference_number, e01_date_of_issue, e01_date_of_expiry, e01_additional_notes ='', '', '', '', '', '', '', '', '', ''
 
     # Create a radio button for the Yes/No question
     british_or_not = st.radio(
@@ -375,8 +686,8 @@ def app():
 
     st.subheader('Participant self declaration of highest qualification level')
     participant_options = [
-        'Below Level 1', 'Level 1', 'Level 2', 'Level 3', 'Level 4',
-        'Level 5 and above', 'No Qualifications'
+        'Below Level 1', 'Level 1', 'Level 2', 'Full Level 2', 'Level 3', 'Full Level 3', 'Level 4',
+        'Level 5', 'Level 6', 'Level 7 and above', 'No Qualifications'
     ]
 
 
@@ -386,26 +697,42 @@ def app():
     p58 = '-'
     p59 = '-'
     p60 = '-'
+    p60z = '-'
+    p60a = '-'
     p61 = '-'
+    p61z = '-'
+    p61a = '-'
     p62 = '-'
     p63 = '-'
+    p63z = '-'
+    p63a = '-'
+    p63b = '-'
     p64 = '-'
 
 
-    if participant_declaration == participant_options[0]:
+    if participant_declaration == participant_options[0]:   #Below Level 1
         p58 = 'X'
-    elif participant_declaration == participant_options[1]:
+    elif participant_declaration == participant_options[1]: #Level 1
         p59 = 'X'
-    elif participant_declaration == participant_options[2]:
-        p60 = 'X'
-    elif participant_declaration == participant_options[3]:
-        p61 = 'X'
-    elif participant_declaration == participant_options[4]:
+    elif participant_declaration == participant_options[2]: #Level 2
+        p60, p60z = 'X', 'X'
+    elif participant_declaration == participant_options[3]: #Full Level 2
+        p60, p60a = 'X', 'X'
+    elif participant_declaration == participant_options[4]: #Level 3
+        p61, p61z = 'X', 'X'
+    elif participant_declaration == participant_options[5]: #Full Level 3
+        p61, p61a = 'X', 'X'
+    elif participant_declaration == participant_options[6]: #Level 4
         p62 = 'X'
-    elif participant_declaration == participant_options[5]:
-        p63 = 'X'
-    elif participant_declaration == participant_options[6]:
+    elif participant_declaration == participant_options[7]: #Level 5
+        p63, p63z = 'X', 'X' 
+    elif participant_declaration == participant_options[8]: #Level 6
+        p63, p63a = 'X', 'X'
+    elif participant_declaration == participant_options[9]: #Level 7 and above
+        p63, p63b = 'X', 'X', 'X'
+    elif participant_declaration == participant_options[10]: #No Qualifications
         p64 = 'X'
+    
 
 
     # st.subheader('Training Providers declaration')
@@ -618,35 +945,50 @@ def app():
     )
 
 
-    st.subheader('Courses/Programs Available')
-    courses_programs_available = st.text_area(
-        'What courses/programs/activity are available to you in order to meet your and your employer\'s needs?'
-    )
+    # st.subheader('Courses/Programs Available')
+    # courses_programs_available = st.text_area(
+    #     'What courses/programs/activity are available to you in order to meet your and your employer\'s needs?'
+    # )
 
-    st.header('Induction Checklist')
+    # st.header('Induction Checklist')
 
 
-    funded_by_mayor_of_london = st.checkbox(
-        'This programme is funded by the Mayor of London')
-    lls_completed = st.checkbox(
-        'The London Learning Survey (LLS) has been completed and submitted')
-    equality_diversity_policy = st.checkbox(
-        'Equality and Diversity Policy/Procedure and point of contact')
-    health_safety_policy = st.checkbox(
-        'Health and Safety Policy/Procedure and point of contact')
-    safeguarding_policy = st.checkbox(
-        'Safeguarding Policy/Procedure and point of contact')
-    prevent_policy = st.checkbox(
-        'PREVENT and point of contact (including British Values)')
-    disciplinary_policy = st.checkbox(
-        'Disciplinary, Appeal and Grievance Policy/Procedures')
-    plagiarism_policy = st.checkbox('Plagiarism, Cheating Policy/Procedure')
-    terms_conditions = st.checkbox(
-        'Terms and Conditions of Learning and programme content & programme delivery'
-    )
+    # funded_by_mayor_of_london = st.checkbox(
+    #     'This programme is funded by the Mayor of London')
+    # lls_completed = st.checkbox(
+    #     'The London Learning Survey (LLS) has been completed and submitted')
+    # equality_diversity_policy = st.checkbox(
+    #     'Equality and Diversity Policy/Procedure and point of contact')
+    # health_safety_policy = st.checkbox(
+    #     'Health and Safety Policy/Procedure and point of contact')
+    # safeguarding_policy = st.checkbox(
+    #     'Safeguarding Policy/Procedure and point of contact')
+    # prevent_policy = st.checkbox(
+    #     'PREVENT and point of contact (including British Values)')
+    # disciplinary_policy = st.checkbox(
+    #     'Disciplinary, Appeal and Grievance Policy/Procedures')
+    # plagiarism_policy = st.checkbox('Plagiarism, Cheating Policy/Procedure')
+    # terms_conditions = st.checkbox(
+    #     'Terms and Conditions of Learning and programme content & programme delivery'
+    # )
+
+    # Privacy and Data Protection Information Section
+    st.header('Privacy and Data Protection Information')
+
+    # Display image
+    st.image("Privacy and Data Protection Information.jpg")
+
+    st.write("Add Y or N for any of the following boxes if you AGREE to be contacted; tick how you wish to be contacted")
+
+    # Contact preferences
+    contact_courses = st.radio("About courses/learning opportunities (fill in all boxes with either Y or N)", options=["Y", "N"])
+    contact_surveys = st.radio("For surveys & research", options=["Y", "N"])
+    contact_phone = st.radio("Phone", options=["Y", "N"])
+    contact_email = st.radio("Email", options=["Y", "N"])
+    contact_post = st.radio("Post", options=["Y", "N"])
+
 
     st.header('Declarations')
-
 
     # st.subheader('Provider Confirmation')
     st.text(
@@ -750,34 +1092,34 @@ def app():
             'p62': p62,
             'p63': p63,
             'p64': p64,
-            'p65': p65,
-            'p66': p66,
-            'p67': p67,
-            'p68': p68,
-            'p69': p69,
-            'p70': p70,
-            'p71': p71,
-            'p72': p72,
-            'p73': justification,
-            'p74': p74,
-            'p75': p75,
-            'p76': p76,
-            'p77': p77,
-            'p78': p78,
-            'p79': p79,
-            'p80': p80,
-            'p81': p81,
-            'p82': p82,
-            'p83': p83,
-            'p84': p84,
-            'p85': p85,
-            'p86': p86,
-            'p87': p87,
-            'p88': p88,
-            'p89': p89,
-            'p90': p90,
-            'p91': p91,
-            'p92': support_details,
+            # 'p65': p65,
+            # 'p66': p66,
+            # 'p67': p67,
+            # 'p68': p68,
+            # 'p69': p69,
+            # 'p70': p70,
+            # 'p71': p71,
+            # 'p72': p72,
+            # 'p73': justification,
+            # 'p74': p74,
+            # 'p75': p75,
+            # 'p76': p76,
+            # 'p77': p77,
+            # 'p78': p78,
+            # 'p79': p79,
+            # 'p80': p80,
+            # 'p81': p81,
+            # 'p82': p82,
+            # 'p83': p83,
+            # 'p84': p84,
+            # 'p85': p85,
+            # 'p86': p86,
+            # 'p87': p87,
+            # 'p88': p88,
+            # 'p89': p89,
+            # 'p90': p90,
+            # 'p91': p91,
+            # 'p92': support_details,
             'p93': p93,
             'p94': p94,
             'p95': p95,
@@ -788,13 +1130,13 @@ def app():
             'p100': career_aspirations,
             'p101': training_qualifications_needed,
             'p102': barriers_to_achieving_aspirations,
-            'p103': courses_programs_available,
+            # 'p103': courses_programs_available,
             # 'p113': participant_signature,
             'p114': date_signed,
         }
 
         # mandatory fields validation
-        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103'}     # exclude fields
+        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21'}     # exclude fields
         mandatory_fields = [f'p{i}' for i in range(1, 151) if f'p{i}' not in exclude_fields]    # define mandatory fields
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
@@ -945,5 +1287,10 @@ def handle_file_upload(label, key_prefix):
     else:
         return '-'
     
+def calculate_age(born):
+    today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+
+
 if __name__ == '__main__':
     app()
