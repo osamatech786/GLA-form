@@ -8,6 +8,7 @@ from openpyxl.drawing.image import Image as XLImage
 from datetime import datetime, date
 import smtplib
 from email.message import EmailMessage
+from datetime import date, timedelta
 
 def app():
     st.set_page_config(
@@ -29,6 +30,8 @@ def app():
 
     st.image('header/header-GLA.png', use_column_width=True)
 
+    files=list()
+
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
 
@@ -46,235 +49,236 @@ def app():
     help="Choose a date"  # Tooltip text
 )
 
-    st.header('Eligibility Check')
+    # st.header('Eligibility Check')
 
-    st.text("""
-        Evidence CANNOT be accepted that has been entered at a later date than Actual End Date of the start aim.
-        Evidence must be present for ALL 4 (EO1,2,3,4) of the below eligibility checks. Original documentation must have been witnessed by the Provider and preferably copies made as evidence in case of future audits.
-        For list of ALL acceptable supporting documents check 'Start-Eligibility Evidence list'
-        """)
+    # st.text("""
+    #     Evidence CANNOT be accepted that has been entered at a later date than Actual End Date of the start aim.
+    #     Evidence must be present for ALL 4 (EO1,2,3,4) of the below eligibility checks. Original documentation must have been witnessed by the Provider and preferably copies made as evidence in case of future audits.
+    #     For list of ALL acceptable supporting documents check 'Start-Eligibility Evidence list'
+    #     """)
 
-    st.text("""
-        UK, EEA Nationals and Non-EEA Nationals
+    # st.text("""
+    #     UK, EEA Nationals and Non-EEA Nationals
 
-        EEA Countries (as of 27/01/2021): 
-        Austria, Belgium, Bulgaria, Croatia, Republic of Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden, Iceland, Liechtenstein, Norway.
+    #     EEA Countries (as of 27/01/2021): 
+    #     Austria, Belgium, Bulgaria, Croatia, Republic of Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden, Iceland, Liechtenstein, Norway.
 
-        Switzerland is not an EU or EEA member but is part of the single market. This means Swiss nationals have the same rights to live and work in the UK as other EEA nationals.
+    #     Switzerland is not an EU or EEA member but is part of the single market. This means Swiss nationals have the same rights to live and work in the UK as other EEA nationals.
 
-        “Irish citizens in the UK hold a unique status under each country’s national law. You do not need permission to enter or remain in the UK, including a visa, any form of residence permit or employment permit”. Quote taken from below link:
-        https://www.gov.uk/government/publications/common-travel-area-guidance/common-travel-area-guidance
+    #     “Irish citizens in the UK hold a unique status under each country’s national law. You do not need permission to enter or remain in the UK, including a visa, any form of residence permit or employment permit”. Quote taken from below link:
+    #     https://www.gov.uk/government/publications/common-travel-area-guidance/common-travel-area-guidance
 
-        Non-EEA nationals who hold leave to enter or leave to remain with a permission to work (including status under the EUSS where they are an eligible family member of an EEA national) are also eligible for ESF support whilst in the UK.
-        """)
+    #     Non-EEA nationals who hold leave to enter or leave to remain with a permission to work (including status under the EUSS where they are an eligible family member of an EEA national) are also eligible for ESF support whilst in the UK.
+    #     """)
 
     st.header('E01: Right to Live and Work in the UK')
-    st.subheader(
-        'UK and Irish National and European Economic Area (EEA) National?')
 
-    nationality = st.text_input('Nationality')
-    options = [
-        'Full UK Passport',
-        'Full EU Member Passport (must be in date - usually 10 years)',
-        'National Identity Card (EU)'
-    ]
-    selected_option_nationality = st.radio("Select the type of document:",
-                                           options)
-    full_uk_passport, full_eu_passport, national_identity_card = '', '', ''
-    if selected_option_nationality == options[0]:
-        full_uk_passport, full_eu_passport, national_identity_card = 'X', '', ''
-    elif selected_option_nationality == options[1]:
-        full_uk_passport, full_eu_passport, national_identity_card = '', 'X', ''
-    elif selected_option_nationality == options[2]:
-        full_uk_passport, full_eu_passport, national_identity_card = '', '', 'X'
-
-    st.text(
-        'In order to be eligible for ESF funding, EEA Nationals must meet one of the following conditions'
-    )
-    options = [
-        'a. Hold settled status granted under the EU Settlement Scheme (EUSS)',
-        'b. Hold pre-settled status granted under the European Union Settlement Scheme (EUSS)',
-        'c. Hold leave to remain with permission to work granted under the new Points Based Immigration System'
-    ]
-    settled_status = st.radio("Select your status:", options)
     hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', ''
-    if settled_status == options[0]:
-        hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = 'X', '', ''
-    elif settled_status == options[1]:
-        hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', 'X', ''
-    elif settled_status == options[2]:
-        hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', 'X'
 
-    not_uk_irish_or_eea_national = st.subheader(
-        'Not UK, Irish or EEA National')
-    not_nationality = st.text_input('Nationality ')
-    passport_non_eu_checked = st.checkbox(
-        'Passport from non-EU member state (must be in date) AND any of the below a, b, or c'
-    )
-    if passport_non_eu_checked:
-        passport_non_eu = 'X'
-    else:
-        passport_non_eu = ''
-
-    options = [
-        "a. Letter from the UK Immigration and Nationality Directorate granting indefinite leave to remain (settled status)",
-        "b. Passport either endorsed 'indefinite leave to remain' – (settled status) or includes work or residency permits or visa stamps (unexpired) and all related conditions met; add details below",
-        "c. Some non-EEA nationals have an Identity Card (Biometric Permit) issued by the Home Office in place of a visa, confirming the participant’s right to stay, work or study in the UK – these cards are acceptable"
-    ]
-
-    document_type = st.radio("Select the type of document:", options)
-
-    letter_uk_immigration, passport_endorsed, identity_card = '', '', ''
-
-    if document_type == options[0]:
-        letter_uk_immigration, passport_endorsed, identity_card = 'X', '', ''
-    elif document_type == options[1]:
-        letter_uk_immigration, passport_endorsed, identity_card = '', 'X', ''
-    elif document_type == options[2]:
-        letter_uk_immigration, passport_endorsed, identity_card = '', '', 'X'
-
-    country_of_issue = st.text_input('Country of issue')
-    id_document_reference_number = st.text_input(
-        'ID Document Reference Number')
-
-    e01_date_of_issue = st.date_input(
-    label="Date of Issue",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
-
-    e01_date_of_expiry = st.date_input(
-    label="Date of Expiry",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
-
-    e01_additional_notes = st.text_area('Additional Notes',
-                                      'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
-
-
-    st.header(
-        'E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)'
+    # Create a radio button for the Yes/No question
+    british_or_not = st.radio(
+        'Are you a UK OR Irish National OR European Economic Area (EEA) National?',
+        ('Yes', 'No')
     )
 
-    if st.checkbox('Full Passport (EU Member State)'):
-        full_passport_eu = 'X'
-    else:
-        full_passport_eu = '-'
+    if british_or_not == 'Yes':
+        nationality = st.text_input('Nationality')
+        options = [
+            'Full UK Passport',
+            'Full EU Member Passport (must be in date - usually 10 years)',
+            'National Identity Card (EU)'
+        ]
+        selected_option_nationality = st.radio("Select the type of document:", options)
+        full_uk_passport, full_eu_passport, national_identity_card = '', '', ''
 
-    if st.checkbox('National ID Card (EU)'):
-        national_id_card_eu = 'X'
-    else:
-        national_id_card_eu = '-'
+        if selected_option_nationality == options[0]:
+            full_uk_passport, full_eu_passport, national_identity_card = 'X', '', ''
+            st.text('Please upload a copy of your Full UK Passport')
+            uploaded_file = st.file_uploader("Upload Full UK Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
 
-    if st.checkbox('Firearms Certificate/Shotgun Licence'):
-        firearms_certificate = 'X'
-    else:
-        firearms_certificate = '-'
+        elif selected_option_nationality == options[1]:
+            full_uk_passport, full_eu_passport, national_identity_card = '', 'X', ''
+            st.text('Please upload a copy of your Full EU Member Passport')
+            uploaded_file = st.file_uploader("Upload Full EU Member Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
 
-    if st.checkbox('Birth/Adoption Certificate'):
-        birth_adoption_certificate = 'X'
-    else:
-        birth_adoption_certificate = '-'
+        elif selected_option_nationality == options[2]:
+            full_uk_passport, full_eu_passport, national_identity_card = '', '', 'X'
+            st.text('Please upload a copy of your National Identity Card (EU)')
+            uploaded_file = st.file_uploader("Upload National Identity Card (EU)", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
 
-    if st.checkbox('Drivers Licence (photo card)'):
-        e02_drivers_license = 'X'
-    else:
-        e02_drivers_license = '-'
+        if selected_option_nationality in [options[1], options[2]]:
+            st.text(
+                'In order to be eligible for ESF funding, EEA Nationals must meet one of the following conditions'
+            )
+            conditions = [
+                'a. Hold settled status granted under the EU Settlement Scheme (EUSS)',
+                'b. Hold pre-settled status granted under the European Union Settlement Scheme (EUSS)',
+                'c. Hold leave to remain with permission to work granted under the new Points Based Immigration System'
+            ]
+            settled_status = st.radio("Select your status:", conditions)
 
-    if st.checkbox('Letter from Educational Institution* (showing DOB)'):
-        edu_institution_letter = 'X'
-    else:
-        edu_institution_letter = '-'
+            if settled_status == conditions[0]:
+                hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = 'X', '', ''
+                st.text('Please upload proof of your settled status')
+                uploaded_file = st.file_uploader("Upload Proof of Settled Status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file is not None:
+                    files.append(uploaded_file)
 
-    if st.checkbox('Employment Contract/Pay Slip (showing DOB)'):
-        e02_employment_contract = 'X'
-    else:
-        e02_employment_contract = '-'
+            elif settled_status == conditions[1]:
+                hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', 'X', ''
+                st.text('Please upload proof of your pre-settled status')
+                uploaded_file = st.file_uploader("Upload Proof of Pre-Settled Status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file is not None:
+                    files.append(uploaded_file)
 
-    if st.checkbox('State Benefits Letter* (showing DOB)'):
-        state_benefits_letter = 'X'
-    else:
-        state_benefits_letter = '-'
+            elif settled_status == conditions[2]:
+                hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', 'X'
+                st.text('Please upload proof of your leave to remain status')
+                uploaded_file = st.file_uploader("Upload Proof of Leave to Remain Status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file is not None:
+                    files.append(uploaded_file)
 
-    if st.checkbox('Pension Statement* (showing DOB)'):
-        pension_statement = 'X'
     else:
-        pension_statement = '-'
+        not_nationality = st.text_input('Nationality ')
+        passport_non_eu_checked = st.checkbox(
+            'Passport from non-EU member state (must be in date) AND any of the below a, b, or c'
+        )
+        if passport_non_eu_checked:
+            passport_non_eu = 'X'
+            st.text('Please upload a copy of your non-EU Passport')
+            uploaded_file = st.file_uploader("Upload Non-EU Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
+        else:
+            passport_non_eu = ''
 
-    if st.checkbox('Northern Ireland voters card'):
-        northern_ireland_voters_card = 'X'
-    else:
-        northern_ireland_voters_card = '-'
-    e02_other_evidence_text = st.text_input(
-        'Other Evidence: Please state type')
+        document_options = [
+            "a. Letter from the UK Immigration and Nationality Directorate granting indefinite leave to remain (settled status)",
+            "b. Passport either endorsed 'indefinite leave to remain' – (settled status) or includes work or residency permits or visa stamps (unexpired) and all related conditions met; add details below",
+            "c. Some non-EEA nationals have an Identity Card (Biometric Permit) issued by the Home Office in place of a visa, confirming the participant’s right to stay, work or study in the UK – these cards are acceptable"
+        ]
+
+        document_type = st.radio("Select the type of document:", document_options)
+        letter_uk_immigration, passport_endorsed, identity_card = '', '', ''
+
+        if document_type == document_options[0]:
+            letter_uk_immigration, passport_endorsed, identity_card = 'X', '', ''
+            st.text('Please upload your Letter from the UK Immigration and Nationality Directorate')
+            uploaded_file = st.file_uploader("Upload Letter from UK Immigration and Nationality Directorate", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
+
+        elif document_type == document_options[1]:
+            letter_uk_immigration, passport_endorsed, identity_card = '', 'X', ''
+            st.text('Please upload your endorsed passport')
+            uploaded_file = st.file_uploader("Upload Endorsed Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
+
+        elif document_type == document_options[2]:
+            letter_uk_immigration, passport_endorsed, identity_card = '', '', 'X'
+            st.text('Please upload your Identity Card (Biometric Permit)')
+            uploaded_file = st.file_uploader("Upload Identity Card (Biometric Permit)", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
+
+        country_of_issue = st.text_input('Country of issue')
+        id_document_reference_number = st.text_input('ID Document Reference Number')
+
+        e01_date_of_issue = st.date_input(
+            label="Date of Issue",
+            value=datetime(2000, 1, 1),  # Default date
+            min_value=date(1900, 1, 1),  # Minimum selectable date
+            max_value=date(2025, 12, 31),  # Maximum selectable date
+            help="Choose a date"  # Tooltip text
+        )
+
+        e01_date_of_expiry = st.date_input(
+            label="Date of Expiry",
+            value=datetime(2000, 1, 1),  # Default date
+            min_value=date(1900, 1, 1),  # Minimum selectable date
+            max_value=date(2025, 12, 31),  # Maximum selectable date
+            help="Choose a date"  # Tooltip text
+        )
+
+        e01_additional_notes = st.text_area('Additional Notes',
+                                            'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
+        
+
+    
+    st.header('E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)')
+
+
+
+    full_passport_eu = add_checkbox_with_upload('Full Passport (EU Member State)', 'full_passport_eu')
+    national_id_card_eu = add_checkbox_with_upload('National ID Card (EU)', 'national_id_card_eu')
+    firearms_certificate = add_checkbox_with_upload('Firearms Certificate/Shotgun Licence', 'firearms_certificate')
+    birth_adoption_certificate = add_checkbox_with_upload('Birth/Adoption Certificate', 'birth_adoption_certificate')
+    e02_drivers_license = add_checkbox_with_upload('Drivers Licence (photo card)', 'e02_drivers_license')
+    edu_institution_letter = add_checkbox_with_upload('Letter from Educational Institution* (showing DOB)', 'edu_institution_letter')
+    e02_employment_contract = add_checkbox_with_upload('Employment Contract/Pay Slip (showing DOB)', 'e02_employment_contract')
+    state_benefits_letter = add_checkbox_with_upload('State Benefits Letter* (showing DOB)', 'state_benefits_letter')
+    pension_statement = add_checkbox_with_upload('Pension Statement* (showing DOB)', 'pension_statement')
+    northern_ireland_voters_card = add_checkbox_with_upload('Northern Ireland voters card', 'northern_ireland_voters_card')
+
+    e02_other_evidence_text = st.text_input('Other Evidence: Please state type')
+
+    # Validation for the last 3 months
+    current_date = date.today()
+    three_months_ago = current_date - timedelta(days=90)
+
     e02_date_of_issue = st.date_input(
-    label="Date of Issue of evidence",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
-
-    st.header(
-        'E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months'
+        label="Date of Issue of evidence",
+        value=date.today(),  # Default date
+        min_value=date(1900, 1, 1),  # Minimum selectable date
+        max_value=date(2025, 12, 31),  # Maximum selectable date
+        help="Choose a date"  # Tooltip text
     )
-    if st.checkbox('Drivers Licence (photo card) '):
-        e03_drivers_license = 'X'
-    else:
-        e03_drivers_license = '-'
 
-    if st.checkbox('Bank Statement *'):
-        bank_statement = 'X'
-    else:
-        bank_statement = '-'
+    # Check if the selected date is within the last three months
+    if e02_date_of_issue < three_months_ago:
+        st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
+        st.stop()
+    st.success("The date of issue is within the last 3 months.")
+    
 
-    if st.checkbox('Pension Statement*'):
-        pension_statement = 'X'
-    else:
-        pension_statement = '-'
+    st.header('E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months')
 
-    if st.checkbox('Mortgage Statement*'):
-        mortgage_statement = 'X'
-    else:
-        mortgage_statement = '-'
+    e03_drivers_license = add_checkbox_with_upload('Drivers Licence (photo card)', 'e03_drivers_license')
+    bank_statement = add_checkbox_with_upload('Bank Statement *', 'bank_statement')
+    e03_pension_statement = add_checkbox_with_upload('Pension Statement*', 'e03_pension_statement')
+    mortgage_statement = add_checkbox_with_upload('Mortgage Statement*', 'mortgage_statement')
+    utility_bill = add_checkbox_with_upload('Utility Bill* (excluding mobile phone)', 'utility_bill')
+    council_tax_statement = add_checkbox_with_upload('Council Tax annual statement or monthly bill*', 'council_tax_statement')
+    electoral_role_evidence = add_checkbox_with_upload('Electoral Role registration evidence*', 'electoral_role_evidence')
+    homeowner_letter = add_checkbox_with_upload('Letter/confirmation from homeowner (family/lodging)', 'homeowner_letter')
 
-    if st.checkbox('Utility Bill* (excluding mobile phone)'):
-        utility_bill = 'X'
-    else:
-        utility_bill = '-'
+    e03_other_evidence_text = st.text_input('Other Evidence: Please state type', key='e03_other_evidence')
 
-    if st.checkbox('Council Tax annual statement or monthly bill*'):
-        council_tax_statement = 'X'
-    else:
-        council_tax_statement = '-'
-
-    if st.checkbox('Electoral Role registration evidence*'):
-        electoral_role_evidence = 'X'
-    else:
-        electoral_role_evidence = '-'
-
-    if st.checkbox('Letter/confirmation from homeowner (family/lodging)'):
-        homeowner_letter = 'X'
-    else:
-        homeowner_letter = '-'
+    # Validation for the last 3 months
     e03_date_of_issue = st.date_input(
-    label="Date of Issue evidence",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
-    e03_other_evidence_text = st.text_input(
-        'Other Evidence: Please state type ')
-
-    st.header(
-        'E04: Employment Status (please select one option from below and take a copy)'
+        label="Date of Issue evidence",
+        value=date.today(),  # Default date
+        min_value=date(1900, 1, 1),  # Minimum selectable date
+        max_value=date(2025, 12, 31),  # Maximum selectable date
+        help="Choose a date",  # Tooltip text
+        key='e03_date_of_issue'
     )
+
+    # Check if the selected date is within the last three months
+    if e03_date_of_issue < three_months_ago:
+        st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
+        st.stop()
+    st.success("The date of issue is within the last 3 months.")
+
+    st.header('E04: Employment Status (please select one option from below and take a copy)')
+
     latest_payslip = '-'
     e04_employment_contract = '-'
     confirmation_from_employer = '-'
@@ -285,6 +289,7 @@ def app():
     companies_house_records = '-'
     other_evidence_employed = '-'
     unemployed = '-'
+
     main_options = [
         'a. Latest Payslip (maximum 3 months prior to start date)',
         'b. Employment Contract',
@@ -294,16 +299,17 @@ def app():
         'f. Other evidence as listed in the \'Start-Eligibility Evidence list\' under Employed section - State below',
         'g. Unemployed (complete the Employment section in ILP form)'
     ]
-    selected_main_option = st.radio("Select an employment status or document:",
-                                    main_options)
+
+    selected_main_option = st.radio("Select an employment status or document:", main_options, key="e04_main_option")
+
     if selected_main_option == main_options[0]:
-        latest_payslip = 'X'
+        latest_payslip = handle_file_upload('Latest Payslip (maximum 3 months prior to start date)', 'latest_payslip')
     elif selected_main_option == main_options[1]:
-        e04_employment_contract = 'X'
+        e04_employment_contract = handle_file_upload('Employment Contract', 'e04_employment_contract')
     elif selected_main_option == main_options[2]:
-        confirmation_from_employer = 'X'
+        confirmation_from_employer = handle_file_upload('Confirmation from the employer', 'confirmation_from_employer')
     elif selected_main_option == main_options[3]:
-        redundancy_notice = 'X'
+        redundancy_notice = handle_file_upload('Redundancy consultation or notice', 'redundancy_notice')
     elif selected_main_option == main_options[4]:
         self_employed_options = [
             "HMRC 'SA302' self-assessment tax declaration, with acknowledgement of receipt (within last 12 months)",
@@ -311,33 +317,45 @@ def app():
             'Business records in the name of the business - evidence that a business has been established and is active / operating (within last 12 months)',
             'If registered as a Limited company: Companies House records / listed as Company Director (within last 12 months)'
         ]
-        selected_self_employed_option = st.radio(
-            "Select self-employed evidence:", self_employed_options)
+        selected_self_employed_option = st.radio("Select self-employed evidence:", self_employed_options, key="e04_self_employed_option")
         if selected_self_employed_option == self_employed_options[0]:
-            sa302_declaration = 'X'
+            sa302_declaration = handle_file_upload("HMRC 'SA302' self-assessment tax declaration", 'sa302_declaration')
         elif selected_self_employed_option == self_employed_options[1]:
-            ni_contributions = 'X'
+            ni_contributions = handle_file_upload('Records of Class 2 National Insurance Contributions', 'ni_contributions')
         elif selected_self_employed_option == self_employed_options[2]:
-            business_records = 'X'
+            business_records = handle_file_upload('Business records', 'business_records')
         elif selected_self_employed_option == self_employed_options[3]:
-            companies_house_records = 'X'
+            companies_house_records = handle_file_upload('Companies House records', 'companies_house_records')
     elif selected_main_option == main_options[5]:
-        other_evidence_employed = 'X'
+        other_evidence_employed = handle_file_upload("Other evidence as listed in the 'Start-Eligibility Evidence list'", 'other_evidence_employed')
     elif selected_main_option == main_options[6]:
-        unemployed = 'X'
+        unemployed = handle_file_upload('Unemployed (complete the Employment section in ILP form)', 'unemployed')
+
+    # Validation for the date of issue
+    current_date = date.today()
+    three_months_ago = current_date - timedelta(days=90)
+
     e04_date_of_issue = st.date_input(
-    label="Date of Issue   evidence",
-    value=datetime(2000, 1, 1),  # Default date
-    min_value=date(1900, 1, 1),  # Minimum selectable date
-    max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
-)
+        label="Date of Issue of evidence",
+        value=date.today(),  # Default date
+        min_value=date(1900, 1, 1),  # Minimum selectable date
+        max_value=date(2025, 12, 31),  # Maximum selectable date
+        help="Choose a date",  # Tooltip text
+        key='e04_date_of_issue'
+    )
+
+    if e04_date_of_issue < three_months_ago:
+        st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
+        st.stop()
+    st.success("The date of issue is within the last 3 months.")
 
     st.header('Initial Assessment')
-    qualification_or_training = st.checkbox(
-        'Are you currently undertaking a qualification or training?')
+  
+    qualification_or_training = st.radio(
+    'Are you currently undertaking a qualification or training?',
+    ['No', 'Yes'])
 
-    if qualification_or_training:
+    if qualification_or_training=='Yes':
         qualification_or_training_y, qualification_or_training_n = 'Y', '-'
         st.subheader('Details of Qualification or Training')
 
@@ -349,7 +367,7 @@ def app():
         qualification_or_training_y, qualification_or_training_n = '-', 'N'
         course_details, funding_details = '', ''
         st.write(
-            'You answered No to currently undertaking a qualification or training.'
+            'You answered "No" to currently undertaking a qualification or training.'
         )
 
     st.header('Evidenced Qualification Levels')
@@ -390,157 +408,157 @@ def app():
         p64 = 'X'
 
 
-    st.subheader('Training Providers declaration')
-    training_provider_options = [
-        'Below Level 1', 'Level 1', 'Level 2', 'Level 3', 'Below Level 4',
-        'Level 5 and above', 'No Qualifications', 'No Personal Learning Record'
-    ]
+    # st.subheader('Training Providers declaration')
+    # training_provider_options = [
+    #     'Below Level 1', 'Level 1', 'Level 2', 'Level 3', 'Below Level 4',
+    #     'Level 5 and above', 'No Qualifications', 'No Personal Learning Record'
+    # ]
 
-    training_provider_declaration = st.radio(
-        'Please check the PLR and record information about prior attainment level to ensure correct recording of prior attainment, as well as ensuring no duplication of learning aims or units takes place.',
-        training_provider_options)
-    p65 = '-'
-    p66 = '-'
-    p67 = '-'
-    p68 = '-'
-    p69 = '-'
-    p70 = '-'
-    p71 = '-'
-    p72 = '-'
-    justification='-'
+    # training_provider_declaration = st.radio(
+    #     'Please check the PLR and record information about prior attainment level to ensure correct recording of prior attainment, as well as ensuring no duplication of learning aims or units takes place.',
+    #     training_provider_options)
+    # p65 = '-'
+    # p66 = '-'
+    # p67 = '-'
+    # p68 = '-'
+    # p69 = '-'
+    # p70 = '-'
+    # p71 = '-'
+    # p72 = '-'
+    # justification='-'
 
 
-    if training_provider_declaration == training_provider_options[0]:
-        p65 = 'X'
-    elif training_provider_declaration == training_provider_options[1]:
-        p66 = 'X'
-    elif training_provider_declaration == training_provider_options[2]:
-        p67 = 'X'
-    elif training_provider_declaration == training_provider_options[3]:
-        p68 = 'X'
-    elif training_provider_declaration == training_provider_options[4]:
-        p69 = 'X'
-    elif training_provider_declaration == training_provider_options[5]:
-        p70 = 'X'
-    elif training_provider_declaration == training_provider_options[6]:
-        p71 = 'X'
-    elif training_provider_declaration == training_provider_options[7]:
-        p72 = 'X'
+    # if training_provider_declaration == training_provider_options[0]:
+    #     p65 = 'X'
+    # elif training_provider_declaration == training_provider_options[1]:
+    #     p66 = 'X'
+    # elif training_provider_declaration == training_provider_options[2]:
+    #     p67 = 'X'
+    # elif training_provider_declaration == training_provider_options[3]:
+    #     p68 = 'X'
+    # elif training_provider_declaration == training_provider_options[4]:
+    #     p69 = 'X'
+    # elif training_provider_declaration == training_provider_options[5]:
+    #     p70 = 'X'
+    # elif training_provider_declaration == training_provider_options[6]:
+    #     p71 = 'X'
+    # elif training_provider_declaration == training_provider_options[7]:
+    #     p72 = 'X'
 
-    justification = st.text_area(
-            'If there is a discrepancy between Participant self declaration and the PLR, please record justification for level to be reported'
-        )
+    # justification = st.text_area(
+    #         'If there is a discrepancy between Participant self declaration and the PLR, please record justification for level to be reported'
+    #     )
 
-    st.subheader('Does the participant have Basic Skills?')
+    # st.subheader('Does the participant have Basic Skills?')
 
-    english_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
+    # english_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
 
-    english_skill = st.selectbox('English', english_options)
+    # english_skill = st.selectbox('English', english_options)
 
-    p74 = '-'
-    p75 = '-'
-    p76 = '-'
-    p77 = '-'
+    # p74 = '-'
+    # p75 = '-'
+    # p76 = '-'
+    # p77 = '-'
 
-    if english_skill == english_options[0]:
-        p74 = 'X'
-    elif english_skill == english_options[1]:
-        p75 = 'X'
-    elif english_skill == english_options[2]:
-        p76 = 'X'
-    elif english_skill == english_options[3]:
-        p77 = 'X'
+    # if english_skill == english_options[0]:
+    #     p74 = 'X'
+    # elif english_skill == english_options[1]:
+    #     p75 = 'X'
+    # elif english_skill == english_options[2]:
+    #     p76 = 'X'
+    # elif english_skill == english_options[3]:
+    #     p77 = 'X'
 
-    maths_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
+    # maths_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
 
-    maths_skill = st.selectbox('Maths', maths_options)
+    # maths_skill = st.selectbox('Maths', maths_options)
 
-    p78 = '-'
-    p79 = '-'
-    p80 = '-'
-    p81 = '-'
+    # p78 = '-'
+    # p79 = '-'
+    # p80 = '-'
+    # p81 = '-'
 
-    if maths_skill == maths_options[0]:
-        p78 = 'X'
-    elif maths_skill == maths_options[1]:
-        p79 = 'X'
-    elif maths_skill == maths_options[2]:
-        p80 = 'X'
-    elif maths_skill == maths_options[3]:
-        p81 = 'X'
+    # if maths_skill == maths_options[0]:
+    #     p78 = 'X'
+    # elif maths_skill == maths_options[1]:
+    #     p79 = 'X'
+    # elif maths_skill == maths_options[2]:
+    #     p80 = 'X'
+    # elif maths_skill == maths_options[3]:
+    #     p81 = 'X'
 
-    esol_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
+    # esol_options = ['none', 'Entry Level', 'Level 1', 'Level 2+']
 
-    esol_skill = st.selectbox('ESOL', esol_options)
+    # esol_skill = st.selectbox('ESOL', esol_options)
 
-    p82 = '-'
-    p83 = '-'
-    p84 = '-'
-    p85 = '-'
+    # p82 = '-'
+    # p83 = '-'
+    # p84 = '-'
+    # p85 = '-'
 
-    if esol_skill == esol_options[0]:
-        p82 = 'X'
-    elif esol_skill == esol_options[1]:
-        p83 = 'X'
-    elif esol_skill == esol_options[2]:
-        p84 = 'X'
-    elif esol_skill == esol_options[3]:
-        p85 = 'X'
+    # if esol_skill == esol_options[0]:
+    #     p82 = 'X'
+    # elif esol_skill == esol_options[1]:
+    #     p83 = 'X'
+    # elif esol_skill == esol_options[2]:
+    #     p84 = 'X'
+    # elif esol_skill == esol_options[3]:
+    #     p85 = 'X'
 
-    st.subheader('Basic Skills Initial Assessment')
-    st.text(
-        "Initial Assessment Outcomes – record the levels achieved by the Participant"
-    )
+    # st.subheader('Basic Skills Initial Assessment')
+    # st.text(
+    #     "Initial Assessment Outcomes – record the levels achieved by the Participant"
+    # )
 
-    maths_options = ['-', 'E1', 'E2', 'E3', '1', '2']
+    # maths_options = ['-', 'E1', 'E2', 'E3', '1', '2']
 
-    maths_level = st.selectbox('Maths Level', maths_options)
+    # maths_level = st.selectbox('Maths Level', maths_options)
 
-    p86 = ''
+    # p86 = ''
 
-    if maths_level in maths_options[1:]:
-        p86 = maths_level
+    # if maths_level in maths_options[1:]:
+    #     p86 = maths_level
 
-    english_options = ['-', 'E1', 'E2', 'E3', '1', '2']
+    # english_options = ['-', 'E1', 'E2', 'E3', '1', '2']
 
-    english_level = st.selectbox('English Level', english_options)
+    # english_level = st.selectbox('English Level', english_options)
 
-    p87 = ''
+    # p87 = ''
 
-    if english_level in english_options[1:]:
-        p87 = english_level
+    # if english_level in english_options[1:]:
+    #     p87 = english_level
 
-    st.subheader('Numeracy and Literacy Programmes')
-    completion_programmes = st.radio(
-        'Will the Participant be completing relevant Numeracy and/or Literacy programmes within their learning plan?',
-        ['Yes', 'No'])
-    p88 = '-'
-    p89 = '-'
+    # st.subheader('Numeracy and Literacy Programmes')
+    # completion_programmes = st.radio(
+    #     'Will the Participant be completing relevant Numeracy and/or Literacy programmes within their learning plan?',
+    #     ['Yes', 'No'])
+    # p88 = '-'
+    # p89 = '-'
 
-    if completion_programmes == 'Yes':
-        p88 = 'Y'
-        p89 = '-'
-    elif completion_programmes == 'No':
-        p88 = '-'
-        p89 = 'N'
+    # if completion_programmes == 'Yes':
+    #     p88 = 'Y'
+    #     p89 = '-'
+    # elif completion_programmes == 'No':
+    #     p88 = '-'
+    #     p89 = 'N'
 
-    st.subheader('Additional Learning Support')
-    additional_support = st.radio(
-        'Does the Participant require additional learning and/or learner support?',
-        ['Yes', 'No'])
-    p90 = '-'
-    p91 = '-'
-    support_details = '-'
+    # st.subheader('Additional Learning Support')
+    # additional_support = st.radio(
+    #     'Does the Participant require additional learning and/or learner support?',
+    #     ['Yes', 'No'])
+    # p90 = '-'
+    # p91 = '-'
+    # support_details = '-'
 
-    if additional_support == 'Yes':
-        p90 = 'Y'
-        p91 = '-'
-        support_details = st.text_area(
-            'If answered \'Yes\' above, please detail how the participant will be supported'
-        )
-    elif additional_support == 'No':
-        p90 = '-'
-        p91 = 'N'
+    # if additional_support == 'Yes':
+    #     p90 = 'Y'
+    #     p91 = '-'
+    #     support_details = st.text_area(
+    #         'If answered \'Yes\' above, please detail how the participant will be supported'
+    #     )
+    # elif additional_support == 'No':
+    #     p90 = '-'
+    #     p91 = 'N'
 
     st.header('Current Skills, Experience, and IAG')
 
@@ -554,30 +572,25 @@ def app():
         'ISCED 5 to 8 - BTEC Level 5 or NVQ Level 4, Foundation Degree, BA, MA or equivalent'
     ]
 
-
-    education_level = st.selectbox(
+    # Change from selectbox to multiselect
+    selected_levels = st.multiselect(
         'Select the highest level of education at start', education_options)
 
+    # Initialize marks
+    p93, p94, p95, p96, p97, p98 = '-', '-', '-', '-', '-', '-'
 
-    p93 = '-'
-    p94 = '-'
-    p95 = '-'
-    p96 = '-'
-    p97 = '-'
-    p98 = '-'
-
-
-    if education_level == education_options[0]:
+    # Mark selected options
+    if education_options[0] in selected_levels:
         p93 = 'X'
-    elif education_level == education_options[1]:
+    if education_options[1] in selected_levels:
         p94 = 'X'
-    elif education_level == education_options[2]:
+    if education_options[2] in selected_levels:
         p95 = 'X'
-    elif education_level == education_options[3]:
+    if education_options[3] in selected_levels:
         p96 = 'X'
-    elif education_level == education_options[4]:
+    if education_options[4] in selected_levels:
         p97 = 'X'
-    elif education_level == education_options[5]:
+    if education_options[5] in selected_levels:
         p98 = 'X'
 
     st.header('Other Information')
@@ -911,5 +924,26 @@ def send_email_with_attachment(sender_email, sender_password, receiver_email, su
         server.login(sender_email, sender_password)
         server.send_message(msg)
 
+# Function to add a checkbox with a file upload option
+def add_checkbox_with_upload(label, key_prefix):
+    checked = st.checkbox(label, key=f"{key_prefix}_checkbox")
+    if checked:
+        st.text(f'Please upload a copy of your {label}')
+        uploaded_file = st.file_uploader(f"Upload {label}", type=['pdf', 'jpg', 'jpeg', 'png', 'docx'], key=f"{key_prefix}_uploader")
+        if uploaded_file is not None:
+            files.append(uploaded_file)
+        return 'X'
+    else:
+        return '-'
+    
+def handle_file_upload(label, key_prefix):
+    st.text(f'Please upload a copy of your {label}')
+    uploaded_file = st.file_uploader(f"Upload {label}", type=['pdf', 'jpg', 'jpeg', 'png', 'docx'], key=key_prefix)
+    if uploaded_file is not None:
+        files.append(uploaded_file)
+        return 'X'
+    else:
+        return '-'
+    
 if __name__ == '__main__':
     app()
