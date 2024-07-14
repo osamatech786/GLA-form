@@ -1658,7 +1658,7 @@ def app():
         else:        
             # Define input and output paths
             template_file = "ph gla.xlsx"
-            modified_file = "Filled_GLA_AEB_start_forms.xlsx"
+            modified_file = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx"
 
             if len(participant_signature.json_data['objects']) != 0:
                 # Convert the drawing to a PIL image and save it
@@ -1683,11 +1683,11 @@ def app():
                 
                 receiver_email = sender_email
                 # Email details
-                subject = "GLA Form Submission Received"
-                body = "GLA Form submitted. Please find the attached file."
+                subject = f"GLA Form Submission {family_name}"
+                body = "GLA Form submitted. Please find attached files."
                 file_path = "Filled_GLA_AEB_start_forms.xlsx" 
                 # Send email with attachment
-                # send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
+                send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
 
             
             else:
