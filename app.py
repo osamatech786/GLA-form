@@ -35,20 +35,38 @@ def app():
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
 
+    title_mr, title_mrs, title_miss, title_ms='','','',''
     title = st.radio(
         "Title",
         ["Mr", "Mrs", "Miss", "Ms"]
     )
+    if title == "Mr":
+        title_mr = 'X'
+    elif title == "Mrs":
+        title_mrs = 'X'
+    elif title == "Miss":
+        title_miss = 'X'
+    elif title == "Ms":
+        title_ms = 'X'
+
 
     first_name = st.text_input('First Name')
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
 
+    # Initialize gender variables
+    gender_m, gender_f, other_gender, other_gender_text = '', '', '', ''
+    # Radio button for gender selection
     gender = st.radio("Gender", ["M", "F", "Other"])
-
-    if gender == "Other":
-        other_gender = st.text_input("If Other, please state")
-
+    # Conditional input for "Other" gender option
+    if gender == "M":
+        gender_m = 'X'
+    elif gender == "F":
+        gender_f = 'X'
+    elif gender == "Other":
+        other_gender =  'X'
+        other_gender_text = st.text_input("If Other, please state")
+    
     date_of_birth = st.date_input(
     label="Date of Birth",
     value=datetime(2000, 1, 1),  # Default date
@@ -97,6 +115,48 @@ def app():
     ethnicity_code = ethnicity_options[ethnicity_category][ethnicity]
     st.write(f'Ethnicity Code: {ethnicity_code}')
 
+    # Initialize ethnicity variables
+    ethnicity_vars = {f'ethnicity_{i}': '' for i in range(31, 48)}
+    ethnicity_48=''
+    # Set the corresponding ethnicity variable to 'X'
+    if ethnicity_code == 31:
+        ethnicity_31 = 'X'
+    elif ethnicity_code == 32:
+        ethnicity_32 = 'X'
+    elif ethnicity_code == 33:
+        ethnicity_33 = 'X'
+    elif ethnicity_code == 34:
+        ethnicity_34 = 'X'
+    elif ethnicity_code == 35:
+        ethnicity_35 = 'X'
+    elif ethnicity_code == 36:
+        ethnicity_36 = 'X'
+    elif ethnicity_code == 37:
+        ethnicity_37 = 'X'
+    elif ethnicity_code == 38:
+        ethnicity_38 = 'X'
+    elif ethnicity_code == 39:
+        ethnicity_39 = 'X'
+    elif ethnicity_code == 40:
+        ethnicity_40 = 'X'
+    elif ethnicity_code == 41:
+        ethnicity_41 = 'X'
+    elif ethnicity_code == 42:
+        ethnicity_42 = 'X'
+    elif ethnicity_code == 43:
+        ethnicity_43 = 'X'
+    elif ethnicity_code == 44:
+        ethnicity_44 = 'X'
+    elif ethnicity_code == 45:
+        ethnicity_45 = 'X'
+    elif ethnicity_code == 46:
+        ethnicity_46 = 'X'
+    elif ethnicity_code == 47:
+        ethnicity_47 = 'X'
+    else:
+        ethnicity_48='X'
+
+
     national_insurance_number = st.text_input("National Insurance Number")
 
     house_no_name_street = st.text_input("House No./Name & Street")
@@ -115,7 +175,7 @@ def app():
 
     # Household Situation Section
     st.header('Household Situation')
-    st.subheader('Please select the most relevant option (place an "x" in ALL relevant boxes)')
+    st.subheader('Please select the most relevant options. (Tick ALL relevant boxes)')
 
     household_options = {
         '1 - No household member in employment with one or more dependent children': 'JH, JH+DC',
@@ -125,10 +185,30 @@ def app():
         '99 - None of the above apply': 'N/A'
     }
 
+    # Store household selections
     household_selections = {}
     for option, code in household_options.items():
         household_selections[option] = st.checkbox(option, key=code)
 
+    # Initialize relevant variables with empty string values
+    no_member_employed_with_children = ''
+    no_member_employed_without_children = ''
+    single_adult_household_with_children = ''
+    unemployed_single_adult_household = ''
+    none_of_the_above = ''
+
+    # Set variables based on selections
+    if household_selections.get('1 - No household member in employment with one or more dependent children'):
+        no_member_employed_with_children = 'X'
+    if household_selections.get('2 - No household member in employment with no dependent children'):
+        no_member_employed_without_children = 'X'
+    if household_selections.get('3 - Participant lives in a single adult household with dependent children'):
+        single_adult_household_with_children = 'X'
+    if household_selections.get('4 - Learner lives in single unemployed adult household with dependent children'):
+        unemployed_single_adult_household = 'X'
+    if household_selections.get('99 - None of the above apply'):
+        none_of_the_above = 'X'
+        
     # Display selected household situations
     st.subheader('Selected Household Situations:')
     selected_households = [option for option, selected in household_selections.items() if selected]
@@ -145,10 +225,40 @@ def app():
     # Long term disability, health problem, or learning difficulties
     st.subheader('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
     disability = st.radio('Choose the correct option:', ['Y', 'N'])
+    # Initialize variables for disability options
+    has_disability, no_disability = '', ''
+    # Set variables based on user selection
+    if disability == 'Y':
+        has_disability, no_disability = 'Y', '-'
+    else:
+        has_disability, no_disability = '-', 'N'
 
     # LLDD or Health Problem Types
     st.subheader('LLDD or Health Problem Type')
-    columns = ['Type', 'Primary', 'Secondary', 'Tertiary']
+
+    # Initialize variables for each health problem type
+    vision_impairment_primary, vision_impairment_secondary, vision_impairment_tertiary = '-', '-', '-'
+    hearing_impairment_primary, hearing_impairment_secondary, hearing_impairment_tertiary = '-', '-', '-'
+    mobility_impairment_primary, mobility_impairment_secondary, mobility_impairment_tertiary = '-', '-', '-'
+    complex_disabilities_primary, complex_disabilities_secondary, complex_disabilities_tertiary = '-', '-', '-'
+    social_emotional_difficulties_primary, social_emotional_difficulties_secondary, social_emotional_difficulties_tertiary = '-', '-', '-'
+    mental_health_difficulty_primary, mental_health_difficulty_secondary, mental_health_difficulty_tertiary = '-', '-', '-'
+    moderate_learning_difficulty_primary, moderate_learning_difficulty_secondary, moderate_learning_difficulty_tertiary = '-', '-', '-'
+    severe_learning_difficulty_primary, severe_learning_difficulty_secondary, severe_learning_difficulty_tertiary = '-', '-', '-'
+    dyslexia_primary, dyslexia_secondary, dyslexia_tertiary = '-', '-', '-'
+    dyscalculia_primary, dyscalculia_secondary, dyscalculia_tertiary = '-', '-', '-'
+    autism_spectrum_primary, autism_spectrum_secondary, autism_spectrum_tertiary = '-', '-', '-'
+    aspergers_primary, aspergers_secondary, aspergers_tertiary = '-', '-', '-'
+    temporary_disability_primary, temporary_disability_secondary, temporary_disability_tertiary = '-', '-', '-'
+    speech_communication_needs_primary, speech_communication_needs_secondary, speech_communication_needs_tertiary = '-', '-', '-'
+    physical_disability_primary, physical_disability_secondary, physical_disability_tertiary = '-', '-', '-'
+    specific_learning_difficulty_primary, specific_learning_difficulty_secondary, specific_learning_difficulty_tertiary = '-', '-', '-'
+    medical_condition_primary, medical_condition_secondary, medical_condition_tertiary = '-', '-', '-'
+    other_learning_difficulty_primary, other_learning_difficulty_secondary, other_learning_difficulty_tertiary = '-', '-', '-'
+    other_disability_primary, other_disability_secondary, other_disability_tertiary = '-', '-', '-'
+    prefer_not_to_say= '-'
+
+    # Health problem types data
     data = [
         ('Vision impairment (4)', 'vision_primary', 'vision_secondary', 'vision_tertiary'),
         ('Hearing impairment (5)', 'hearing_primary', 'hearing_secondary', 'hearing_tertiary'),
@@ -169,14 +279,144 @@ def app():
         ('Other medical condition (for example epilepsy, asthma, diabetes) (20)', 'medical_primary', 'medical_secondary', 'medical_tertiary'),
         ('Other learning difficulty (90)', 'other_learning_primary', 'other_learning_secondary', 'other_learning_tertiary'),
         ('Other disability (97)', 'other_disability_primary', 'other_disability_secondary', 'other_disability_tertiary'),
-        ('Prefer not to say (98)', 'prefer_not_primary', 'prefer_not_secondary', 'prefer_not_tertiary')
+        ('Prefer not to say (98)', 'prefer_not_to_say', '', '')
     ]
 
+    # Starting placeholder index
+    placeholder_index = 157
+
+    # Create checkboxes and map them to variables explicitly
     for label, primary, secondary, tertiary in data:
         st.write(f'**{label}**')
-        st.checkbox('Primary', key=primary)
-        st.checkbox('Secondary', key=secondary)
-        st.checkbox('Tertiary', key=tertiary)
+        
+        # Create checkboxes
+        primary_checked = st.checkbox('Primary', key=primary)
+        secondary_checked = st.checkbox('Secondary', key=secondary) if secondary else False
+        tertiary_checked = st.checkbox('Tertiary', key=tertiary) if tertiary else False
+
+        # Set variables based on selections
+        if primary_checked:
+            if 'vision' in primary:
+                vision_impairment_primary = 'X'
+            elif 'hearing' in primary:
+                hearing_impairment_primary = 'X'
+            elif 'mobility' in primary:
+                mobility_impairment_primary = 'X'
+            elif 'complex' in primary:
+                complex_disabilities_primary = 'X'
+            elif 'social' in primary:
+                social_emotional_difficulties_primary = 'X'
+            elif 'mental' in primary:
+                mental_health_difficulty_primary = 'X'
+            elif 'moderate' in primary:
+                moderate_learning_difficulty_primary = 'X'
+            elif 'severe' in primary:
+                severe_learning_difficulty_primary = 'X'
+            elif 'dyslexia' in primary:
+                dyslexia_primary = 'X'
+            elif 'dyscalculia' in primary:
+                dyscalculia_primary = 'X'
+            elif 'autism' in primary:
+                autism_spectrum_primary = 'X'
+            elif 'asperger' in primary:
+                aspergers_primary = 'X'
+            elif 'temporary' in primary:
+                temporary_disability_primary = 'X'
+            elif 'speech' in primary:
+                speech_communication_needs_primary = 'X'
+            elif 'physical' in primary:
+                physical_disability_primary = 'X'
+            elif 'specific' in primary:
+                specific_learning_difficulty_primary = 'X'
+            elif 'medical' in primary:
+                medical_condition_primary = 'X'
+            elif 'other_learning' in primary:
+                other_learning_difficulty_primary = 'X'
+            elif 'other_disability' in primary:
+                other_disability_primary = 'X'
+            elif 'prefer_not' in primary:
+                        prefer_not_to_say = 'X'
+
+        if secondary_checked:
+            if 'vision' in secondary:
+                vision_impairment_secondary = 'X'
+            elif 'hearing' in secondary:
+                hearing_impairment_secondary = 'X'
+            elif 'mobility' in secondary:
+                mobility_impairment_secondary = 'X'
+            elif 'complex' in secondary:
+                complex_disabilities_secondary = 'X'
+            elif 'social' in secondary:
+                social_emotional_difficulties_secondary = 'X'
+            elif 'mental' in secondary:
+                mental_health_difficulty_secondary = 'X'
+            elif 'moderate' in secondary:
+                moderate_learning_difficulty_secondary = 'X'
+            elif 'severe' in secondary:
+                severe_learning_difficulty_secondary = 'X'
+            elif 'dyslexia' in secondary:
+                dyslexia_secondary = 'X'
+            elif 'dyscalculia' in secondary:
+                dyscalculia_secondary = 'X'
+            elif 'autism' in secondary:
+                autism_spectrum_secondary = 'X'
+            elif 'asperger' in secondary:
+                aspergers_secondary = 'X'
+            elif 'temporary' in secondary:
+                temporary_disability_secondary = 'X'
+            elif 'speech' in secondary:
+                speech_communication_needs_secondary = 'X'
+            elif 'physical' in secondary:
+                physical_disability_secondary = 'X'
+            elif 'specific' in secondary:
+                specific_learning_difficulty_secondary = 'X'
+            elif 'medical' in secondary:
+                medical_condition_secondary = 'X'
+            elif 'other_learning' in secondary:
+                other_learning_difficulty_secondary = 'X'
+            elif 'other_disability' in secondary:
+                other_disability_secondary = 'X'
+
+        if tertiary_checked:
+            if 'vision' in tertiary:
+                vision_impairment_tertiary = 'X'
+            elif 'hearing' in tertiary:
+                hearing_impairment_tertiary = 'X'
+            elif 'mobility' in tertiary:
+                mobility_impairment_tertiary = 'X'
+            elif 'complex' in tertiary:
+                complex_disabilities_tertiary = 'X'
+            elif 'social' in tertiary:
+                social_emotional_difficulties_tertiary = 'X'
+            elif 'mental' in tertiary:
+                mental_health_difficulty_tertiary = 'X'
+            elif 'moderate' in tertiary:
+                moderate_learning_difficulty_tertiary = 'X'
+            elif 'severe' in tertiary:
+                severe_learning_difficulty_tertiary = 'X'
+            elif 'dyslexia' in tertiary:
+                dyslexia_tertiary = 'X'
+            elif 'dyscalculia' in tertiary:
+                dyscalculia_tertiary = 'X'
+            elif 'autism' in tertiary:
+                autism_spectrum_tertiary = 'X'
+            elif 'asperger' in tertiary:
+                aspergers_tertiary = 'X'
+            elif 'temporary' in tertiary:
+                temporary_disability_tertiary = 'X'
+            elif 'speech' in tertiary:
+                speech_communication_needs_tertiary = 'X'
+            elif 'physical' in tertiary:
+                physical_disability_tertiary = 'X'
+            elif 'specific' in tertiary:
+                specific_learning_difficulty_tertiary = 'X'
+            elif 'medical' in tertiary:
+                medical_condition_tertiary = 'X'
+            elif 'other_learning' in tertiary:
+                other_learning_difficulty_tertiary = 'X'
+            elif 'other_disability' in tertiary:
+                other_disability_tertiary = 'X'
+
 
     # Additional information that may impact learning
     additional_info = st.text_area('Is there any other additional information that may impact on your ability to learn?')
@@ -184,45 +424,74 @@ def app():
     # Other disadvantaged sections
     st.subheader('Other disadvantaged - Ex Offender?')
     ex_offender = st.radio('', ['Y', 'N', 'Choose not to say'], key='ex_offender')
+    # Initialize ex_offender variables
+    ex_offender_y, ex_offender_n, ex_offender_choose_not_to_say = '', '', ''
+    # Conditional input for ex_offender option
+    if ex_offender == "Y":
+        ex_offender_y = 'Y'
+    elif ex_offender == "N":
+        ex_offender_n = 'N'
+    elif ex_offender == "Choose not to say":
+        ex_offender_choose_not_to_say = 'Choose not to say'
 
     st.subheader('Other disadvantaged - Homeless?')
     homeless = st.radio('', ['Y', 'N', 'Choose not to say'], key='homeless')
+    # Initialize homeless variables
+    homeless_y, homeless_n, homeless_choose_not_to_say = '', '', ''
+    # Conditional input for homeless option
+    if homeless == "Y":
+        homeless_y = 'Y'
+    elif homeless == "N":
+        homeless_n = 'N'
+    elif homeless == "Choose not to say":
+        homeless_choose_not_to_say = 'Choose not to say'
 
     # Referral Source Section
     st.header('Referral Source')
-
     # Creating columns for referral source options
     col1, col2, col3, col4 = st.columns(4)
 
+    # Initialize referral source variables
+    internally_sourced, recommendation, event, self_referral, family_friends = '', '', '', '', ''
+    other, website, promotional_material = '', '', ''
+    event_specify, other_specify = '', ''
+
     # Adding checkboxes for each referral source option
     with col1:
-        internally_sourced = st.checkbox('Internally sourced', key='internally_sourced_1')
+        internally_sourced = st.checkbox('Internally sourced', key='internally_sourced')
         recommendation = st.checkbox('Recommendation')
         event = st.checkbox('Event (please specify)')
-
     with col2:
         self_referral = st.checkbox('Self Referral')
         family_friends = st.checkbox('Family/ Friends')
         other = st.checkbox('Other (please specify)')
-
     with col3:
-        website_1 = st.checkbox('Website', key='website_1')
-        internally_sourced_2 = st.checkbox('Internally sourced', key='internally_sourced_2')
-
-    with col4:
+        website = st.checkbox('Website', key='website')
         promotional_material = st.checkbox('Promotional material')
-        website_2 = st.checkbox('Website', key='website_2')
-
     # Text inputs for 'Event (please specify)' and 'Other (please specify)' if checked
     if event:
         event_specify = st.text_input('Please specify the event', key='event_specify')
-
     if other:
         other_specify = st.text_input('Please specify other source', key='other_specify')
 
+    # Setting 'X' for chosen options
+    internally_sourced_val = 'X' if internally_sourced else ''
+    recommendation_val = 'X' if recommendation else ''
+    event_val = event_specify if event else ''
+    self_referral_val = 'X' if self_referral else ''
+    family_friends_val = 'X' if family_friends else ''
+    other_val = other_specify if other else ''
+    website_val = 'X' if website else ''
+    promotional_material_val = 'X' if promotional_material else ''
+
+
+    
 
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
+
+    # Initialize employment status variables
+    unemployed_val, economically_inactive_val, employed_val = '', '', ''
 
     # Participant Employment Status
     st.subheader('Participant Employment Status (place an X in the applicable box)')
@@ -235,11 +504,29 @@ def app():
         ]
     )
 
+    # Setting 'X' for chosen employment status
+    if employment_status == "Unemployed (looking for work and available to start work) -> go to section A":
+        unemployed_val = 'X'
+    elif employment_status == "Economically Inactive (not looking for work and not available to start work) -> Go to section B":
+        economically_inactive_val = 'X'
+    elif employment_status == "Employed (including self-employed) -> go to section C":
+        employed_val = 'X'
+
     # Section A - Unemployment details
     if "Unemployed" in employment_status:
         st.subheader('Section A - Unemployment details')
         st.text("Where a participant’s employment status is long-term unemployed proof of both unemployment and the length of unemployment must be obtained.")
+        
         unemployment_duration = st.radio("If you are not working, how long have you been without work?", ["Up to 12 months", "12 months or longer"])
+        # Initialize unemployment duration variables
+        up_to_12_months_val, twelve_months_or_longer_val = '-', '-'
+        # Setting 'X' for chosen unemployment duration
+        if unemployment_duration == "Up to 12 months":
+            up_to_12_months_val = 'X'
+        elif unemployment_duration == "12 months or longer":
+            twelve_months_or_longer_val = 'X'
+                
+        # Evidence of Unemployment Status Section
         st.write("Evidence of unemployment status (for more information look Start-Eligibility Evidence list tab)")
         unemployment_evidence = st.selectbox(
             "Select evidence type:",
@@ -250,39 +537,81 @@ def app():
                 "Other (please specify)"
             ]
         )
-        if unemployment_evidence == "Other (please specify)":
-            other_evidence = st.text_input("Please specify other evidence")
+
+        # Initialize unemployment evidence variables
+        jcp_dwp_val, careers_service_val, third_party_val, other_evidence_val = '-', '-', '-', '-'
+
+        # Setting 'X' for chosen evidence type
+        if unemployment_evidence == "A Letter or Document from JCP or DWP":
+            jcp_dwp_val = 'X'
+        elif unemployment_evidence == "A written referral from a careers service":
+            careers_service_val = 'X'
+        elif unemployment_evidence == "Third Party Verification or Referral form":
+            third_party_val = 'X'
+        elif unemployment_evidence == "Other (please specify)":
+            other_evidence_val = st.text_input("Please specify other evidence")    
 
     # Section B - Economically Inactive details
     if "Economically Inactive" in employment_status:
         st.subheader('Section B - Economically Inactive details')
+        
+        # Initialize economically inactive variables
+        inactive_status_val, inactive_evidence_type_val, inactive_evidence_date_val = '-', '-', '-'
         inactive_status = st.radio(
             "The Participant is not employed and does not claim benefits at the time of the enrolment.",
             ["Y", "N"]
         )
-        inactive_evidence_type = st.text_input("Type of evidence for Economically Inactive Status including self-declaration statement.")
-        inactive_evidence_date = st.date_input("Date of issue of evidence")
+
+        # Setting 'X' for chosen inactive status
+        inactive_status_val = 'Yes' if inactive_status == "Y" else 'No'
+
+        inactive_evidence_type_val = st.text_input("Type of evidence for Economically Inactive Status including self-declaration statement.")
+        inactive_evidence_date_val = st.date_input("Date of issue of evidence")
 
     # Section C - Employment details
     if "Employed" in employment_status:
         st.subheader('Section C - Employment details')
-        employer_name = st.text_input("Employer Name")
-        employer_address_1 = st.text_input("Employer Address 1")
-        employer_address_2 = st.text_input("Employer Address 2")
-        employer_address_3 = st.text_input("Employer Address 3")
-        employer_postcode = st.text_input("Employer Postcode")
-        employer_contact_name = st.text_input("Main Employer Contact Name")
-        employer_contact_position = st.text_input("Contact Position")
-        employer_contact_email = st.text_input("Contact Email Address")
-        employer_contact_phone = st.text_input("Contact Telephone Number")
-        employer_edrs_number = st.text_input("Employer EDRS number")
+        
+        # Initialize employment detail variables
+        employer_name_val, employer_address_1_val, employer_address_2_val = '', '', ''
+        employer_address_3_val, employer_postcode_val, employer_contact_name_val = '', '', ''
+        employer_contact_position_val, employer_contact_email_val, employer_contact_phone_val = '', '', ''
+        employer_edrs_number_val, living_wage_val, employment_hours_val_0, employment_hours_val_6 = '', '', '', ''
+        claiming_benefits_val, sole_claimant_val, benefits_list_val = '', '', ''
+        other_benefit_val, benefit_claim_date_val = '', ''
+
+        employer_name_val = st.text_input("Employer Name")
+        employer_address_1_val = st.text_input("Employer Address 1")
+        employer_address_2_val = st.text_input("Employer Address 2")
+        employer_address_3_val = st.text_input("Employer Address 3")
+        employer_postcode_val = st.text_input("Employer Postcode")
+        employer_contact_name_val = st.text_input("Main Employer Contact Name")
+        employer_contact_position_val = st.text_input("Contact Position")
+        employer_contact_email_val = st.text_input("Contact Email Address")
+        employer_contact_phone_val = st.text_input("Contact Telephone Number")
+        employer_edrs_number_val = st.text_input("Employer EDRS number")
 
         living_wage = st.radio("Do you earn more than the National Living Wage of £20,319.00 pa (£10.42ph for 37.5 hrs pw)?", ["Y", "N"])
+        living_wage_val = 'Y' if living_wage == "Y" else 'N'
+
         employment_hours = st.radio("Employment Hours (place an X in the applicable box)", ["0-15 hrs per week", "16+ hrs per week"])
+        employment_hours_val_0 = 'X' if employment_hours == "0-15 hrs per week" else '-' 
+        employment_hours_val_6 = 'X' if employment_hours == "16+ hrs per week" else '-' 
 
         claiming_benefits = st.radio("Are you claiming any benefits? If so, please describe below what they are.", ["Y", "N"])
+        claiming_benefits_val = 'Y' if claiming_benefits == "Y" else 'N'
+
         if claiming_benefits == "Y":
             sole_claimant = st.radio("Are you the sole claimant of the benefit?", ["Y", "N"])
+            sole_claimant_val = 'Y' if sole_claimant == "Y" else 'N'
+
+            # Initialize variables for benefits
+            universal_credit_val = ''
+            job_seekers_allowance_val = ''
+            employment_support_allowance_val = ''
+            incapacity_benefit_val = ''
+            personal_independence_payment_val = ''
+            # Benefits List Section
             benefits_list = st.multiselect(
                 "Select the benefits you are claiming:",
                 [
@@ -294,9 +623,26 @@ def app():
                     "Other - please state"
                 ]
             )
+
+            # Update the respective variables based on user selections
+            if "Universal Credit (UC)" in benefits_list:
+                universal_credit_val = 'X'
+            if "Job Seekers Allowance (JSA)" in benefits_list:
+                job_seekers_allowance_val = 'X'
+            if "Employment and Support Allowance (ESA)" in benefits_list:
+                employment_support_allowance_val = 'X'
+            if "Incapacity Benefit (or any other sickness related benefit)" in benefits_list:
+                incapacity_benefit_val = 'X'
+            if "Personal Independence Payment (PIP)" in benefits_list:
+                personal_independence_payment_val = 'X'
+
+            # Handle "Other - please state" input
+            other_benefit_val = ''
             if "Other - please state" in benefits_list:
-                other_benefit = st.text_input("Please state other benefit")
-            benefit_claim_date = st.date_input("From what date has the above claim been in effect?")
+                other_benefit_val = st.text_input("Please state other benefit")
+
+            # Input for the date of claim
+            benefit_claim_date_val = st.date_input("From what date has the above claim been in effect?")
 
 
     # # Detailed Learning Plan Section
@@ -336,21 +682,6 @@ def app():
     # learner_self_efficacy = st.slider("Learner self-efficacy", 1, 5, 1)
     # participation_in_volunteering = st.slider("Participation in volunteering", 1, 5, 1)
 
-
-    # # Privacy and Data Protection Information Section
-    # st.header('Privacy and Data Protection Information')
-
-    # # Display image
-    # st.image("Privacy and Data Protection Information.jpg")
-
-    # st.write("Add Y or N for any of the following boxes if you AGREE to be contacted; tick how you wish to be contacted")
-
-    # # Contact preferences
-    # contact_courses = st.radio("About courses/learning opportunities (fill in all boxes with either Y or N)", options=["Y", "N"])
-    # contact_surveys = st.radio("For surveys & research", options=["Y", "N"])
-    # contact_phone = st.radio("Phone", options=["Y", "N"])
-    # contact_email = st.radio("Email", options=["Y", "N"])
-    # contact_post = st.radio("Post", options=["Y", "N"])
 
 
 
@@ -981,12 +1312,18 @@ def app():
     st.write("Add Y or N for any of the following boxes if you AGREE to be contacted; tick how you wish to be contacted")
 
     # Contact preferences
-    contact_courses = st.radio("About courses/learning opportunities (fill in all boxes with either Y or N)", options=["Y", "N"])
+    contact_courses = st.text("About courses/learning opportunities (fill in all boxes with either Y or N)")
     contact_surveys = st.radio("For surveys & research", options=["Y", "N"])
     contact_phone = st.radio("Phone", options=["Y", "N"])
     contact_email = st.radio("Email", options=["Y", "N"])
     contact_post = st.radio("Post", options=["Y", "N"])
-
+    # Initialize variables for contact preferences
+    contact_surveys_val, contact_phone_val, contact_email_val, contact_post_val = '', '', '', ''
+    # Update the variables based on user selections
+    contact_surveys_val = 'Y' if contact_surveys == "Y" else 'N'
+    contact_phone_val = 'X' if contact_phone == "Y" else 'N'
+    contact_email_val = 'X' if contact_email == "Y" else 'N'
+    contact_post_val = 'X' if contact_post == "Y" else 'N'
 
     st.header('Declarations')
 
@@ -1030,10 +1367,176 @@ def app():
     submit_button = st.button('Submit')
     if submit_button:
         placeholder_values = {
+            'p110': title_mr,
+            'p111': title_mrs,
+            'p112': title_miss,
+            'p113': title_ms,
+
             'p1': first_name,
             'p2': middle_name,
             'p3': family_name,
+
+            'p114': gender_m,
+            'p115': gender_f,
+            'p116': other_gender,
+            'p117': other_gender_text,
+
             'p4': date_of_birth,
+
+            'p118': current_age,
+            'p119': ethnicity_31,
+            'p120': ethnicity_32,
+            'p121': ethnicity_33,
+            'p122': ethnicity_34,
+            'p123': ethnicity_35,
+            'p124': ethnicity_36,
+            'p125': ethnicity_37,
+            'p126': ethnicity_38,
+            'p127': ethnicity_39,
+            'p128': ethnicity_40,
+            'p129': ethnicity_41,
+            'p130': ethnicity_42,
+            'p131': ethnicity_43,
+            'p132': ethnicity_44,
+            'p133': ethnicity_45,
+            'p134': ethnicity_46,
+            'p135': ethnicity_47,
+            'p136': ethnicity_48,
+            'p137': national_insurance_number,
+            'p138': house_no_name_street,
+            'p139': suburb_village,
+            'p140': town_city,
+            'p141': county,
+            'p142': country_of_domicile,
+            'p143': current_postcode,
+            'p144': postcode_prior_enrollment,
+            'p145': email_address,
+            'p146': primary_telephone_number,
+            'p147': secondary_telephone_number,
+            'p148': next_of_kin,
+            'p149': emergency_contact_phone_number,
+            'p150': no_member_employed_with_children,
+            'p151': no_member_employed_without_children,
+            'p152': single_adult_household_with_children,
+            'p153': unemployed_single_adult_household,
+            'p154': none_of_the_above,            
+            'p155': has_disability,
+            'p156': no_disability,
+            'p157a': vision_impairment_primary,
+            'p157b': vision_impairment_secondary,
+            'p157c': vision_impairment_tertiary,
+            'p158a': hearing_impairment_primary,
+            'p158b': hearing_impairment_secondary,
+            'p158c': hearing_impairment_tertiary,
+            'p159a': mobility_impairment_primary,
+            'p159b': mobility_impairment_secondary,
+            'p159c': mobility_impairment_tertiary,
+            'p160a': complex_disabilities_primary,
+            'p160b': complex_disabilities_secondary,
+            'p160c': complex_disabilities_tertiary,
+            'p161a': social_emotional_difficulties_primary,
+            'p161b': social_emotional_difficulties_secondary,
+            'p161c': social_emotional_difficulties_tertiary,
+            'p162a': mental_health_difficulty_primary,
+            'p162b': mental_health_difficulty_secondary,
+            'p162c': mental_health_difficulty_tertiary,
+            'p163a': moderate_learning_difficulty_primary,
+            'p163b': moderate_learning_difficulty_secondary,
+            'p163c': moderate_learning_difficulty_tertiary,
+            'p164a': severe_learning_difficulty_primary,
+            'p164b': severe_learning_difficulty_secondary,
+            'p164c': severe_learning_difficulty_tertiary,
+            'p165a': dyslexia_primary,
+            'p165b': dyslexia_secondary,
+            'p165c': dyslexia_tertiary,
+            'p166a': dyscalculia_primary,
+            'p166b': dyscalculia_secondary,
+            'p166c': dyscalculia_tertiary,
+            'p167a': autism_spectrum_primary,
+            'p167b': autism_spectrum_secondary,
+            'p167c': autism_spectrum_tertiary,
+            'p168a': aspergers_primary,
+            'p168b': aspergers_secondary,
+            'p168c': aspergers_tertiary,
+            'p169a': temporary_disability_primary,
+            'p169b': temporary_disability_secondary,
+            'p169c': temporary_disability_tertiary,
+            'p170a': speech_communication_needs_primary,
+            'p170b': speech_communication_needs_secondary,
+            'p170c': speech_communication_needs_tertiary,
+            'p171a': physical_disability_primary,
+            'p171b': physical_disability_secondary,
+            'p171c': physical_disability_tertiary,
+            'p172a': specific_learning_difficulty_primary,
+            'p172b': specific_learning_difficulty_secondary,
+            'p172c': specific_learning_difficulty_tertiary,
+            'p173a': medical_condition_primary,
+            'p173b': medical_condition_secondary,
+            'p173c': medical_condition_tertiary,
+            'p174a': other_learning_difficulty_primary,
+            'p174b': other_learning_difficulty_secondary,
+            'p174c': other_learning_difficulty_tertiary,
+            'p175a': other_disability_primary,
+            'p175b': other_disability_secondary,
+            'p175c': other_disability_tertiary,
+            'p176': prefer_not_to_say,
+            'p177': additional_info,
+            'p178': ex_offender_y,
+            'p179': ex_offender_n,
+            'p180': ex_offender_choose_not_to_say,
+
+            'p189':homeless_y, 
+            'p190':homeless_n,
+            'p191':homeless_choose_not_to_say,
+
+            'p181': internally_sourced_val,
+            'p182': recommendation_val,
+            'p183': event_val,
+            'p184': self_referral_val,
+            'p185': family_friends_val,
+            'p186': other_val,
+            'p187': website_val,
+            'p188': promotional_material_val,
+
+            'p192': unemployed_val,
+            'p193': economically_inactive_val,
+            'p194': employed_val,
+            'p195': up_to_12_months_val,
+            'p196': twelve_months_or_longer_val,
+            'p197': jcp_dwp_val,
+            'p198': careers_service_val,
+            'p199': third_party_val,
+            'p200': other_evidence_val,
+            'p201': inactive_status_val,
+            'p202': inactive_evidence_type_val,
+            'p203': inactive_evidence_date_val,  
+            'p204': employer_name_val,
+            'p205': employer_address_1_val,
+            'p206': employer_address_2_val,
+            'p207': employer_address_3_val,
+            'p208': employer_postcode_val,
+            'p209': employer_contact_name_val,
+            'p210': employer_contact_position_val,
+            'p211': employer_contact_email_val,
+            'p212': employer_contact_phone_val,
+            'p213': employer_edrs_number_val,
+            'p214': living_wage_val,
+            'p215a': employment_hours_val_0,
+            'p215b': employment_hours_val_6,
+            'p216': claiming_benefits_val,
+            'p217': sole_claimant_val,
+            'p218': universal_credit_val,
+            'p219': job_seekers_allowance_val,
+            'p220': employment_support_allowance_val,
+            'p221': incapacity_benefit_val,
+            'p222': personal_independence_payment_val,
+            'p223': other_benefit_val,
+            'p224': benefit_claim_date_val,                   
+            'p225': contact_surveys_val,
+            'p226': contact_phone_val,
+            'p227': contact_email_val,
+            'p228': contact_post_val,
+
             'p5': nationality,
             'p6': full_uk_passport,
             'p7': full_eu_passport,
@@ -1134,7 +1637,7 @@ def app():
             'p102': barriers_to_achieving_aspirations,
             # 'p103': courses_programs_available,
             # 'p113': participant_signature,
-            'p114': date_signed,
+            'p231': date_signed,
         }
 
         # mandatory fields validation
@@ -1201,7 +1704,7 @@ def resize_image_to_fit_cell(image_path, max_width, max_height):
 
 def replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names):
     # Copy the template file to a new file
-    shutil.copyfile(template_file, modified_file)
+    shutil.copy(template_file, modified_file)
 
     # Load the new copied workbook
     wb = load_workbook(modified_file)
@@ -1217,8 +1720,8 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
                         # Use regular expressions to find full placeholder word
                         pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
                         cell.value = pattern.sub(str(value), cell.value)
-                        if 'p113' in cell.value:
-                            cell.value = cell.value.replace('p113', '')  
+                        if 'p230' in cell.value:
+                            cell.value = cell.value.replace('p230', '')  
                             resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
                             resized_image_path = 'resized_signature_image.png'
                             resized_image.save(resized_image_path)
