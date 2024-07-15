@@ -1685,9 +1685,9 @@ def app():
                 # Email details
                 subject = f"GLA Form Submission {family_name}"
                 body = "GLA Form submitted. Please find attached files."
-                file_path = "Filled_GLA_AEB_start_forms.xlsx" 
+                files.append(f"Filled_GLA_AEB_start_forms_{family_name}.xlsx")
                 # Send email with attachment
-                send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path)
+                send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files)
 
             
             else:
@@ -1749,9 +1749,9 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
             mime='application/octet-stream'
         )
 
-def send_email_with_attachment(sender_email, sender_password, receiver_email, subject, body, file_path):
+def send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, file_paths):
     """
-    Send an email to yourself with an attachment.
+    Send an email to yourself with multiple attachments.
 
     Args:
         sender_email (str): The sender's email address.
@@ -1759,7 +1759,7 @@ def send_email_with_attachment(sender_email, sender_password, receiver_email, su
         receiver_email (str): The receiver's email address (same as sender's in this case).
         subject (str): The subject of the email.
         body (str): The body of the email.
-        file_path (str): The path to the file to be attached.
+        file_paths (list): A list of file paths to be attached.
     """
     msg = EmailMessage()
     msg['From'] = sender_email
@@ -1767,17 +1767,19 @@ def send_email_with_attachment(sender_email, sender_password, receiver_email, su
     msg['Subject'] = subject
     msg.set_content(body)
 
-    # Read the file and attach it to the email
-    with open(file_path, 'rb') as f:
-        file_data = f.read()
-        file_name = file_path.split('/')[-1]
-        msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+    # Iterate over the file paths and attach each file
+    for file_path in file_paths:
+        with open(file_path, 'rb') as f:
+            file_data = f.read()
+            file_name = file_path.split('/')[-1]
+            msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
 
     # Use the SMTP server for Microsoft email accounts
     with smtplib.SMTP('smtp.office365.com', 587) as server:
         server.starttls()
         server.login(sender_email, sender_password)
         server.send_message(msg)
+
 
 # Function to add a checkbox with a file upload option
 def add_checkbox_with_upload(label, key_prefix):
