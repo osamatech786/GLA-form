@@ -1650,7 +1650,18 @@ def app():
 
         # mandatory fields validation
         exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
-        mandatory_fields = [f'p{i}' for i in range(1, 151) if f'p{i}' not in exclude_fields]    # define mandatory fields
+        
+        mandatory_fields = []
+        '''# Append p1 to p10
+        mandatory_fields.extend([f'p{i}' for i in range(1, 11)])
+        # Append p50, p51, p52
+        mandatory_fields.extend(['p50', 'p51', 'p52'])'''
+
+        # Remove excluded fields from mandatory_fields
+        mandatory_fields = [field for field in mandatory_fields if field not in exclude_fields]
+
+
+
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
@@ -1743,7 +1754,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
     with open(modified_file, 'rb') as f:
         file_contents = f.read()
         st.download_button(
-            label="Download File",
+            label="Download Your Response",
             data=file_contents,
             file_name=modified_file,
             mime='application/octet-stream'
@@ -1783,6 +1794,7 @@ def send_email_with_attachments(sender_email, sender_password, receiver_email, s
 
 # Function to add a checkbox with a file upload option
 def add_checkbox_with_upload(label, key_prefix):
+    global files
     checked = st.checkbox(label, key=f"{key_prefix}_checkbox")
     if checked:
         st.text(f'Please upload a copy of your {label}')
@@ -1794,6 +1806,7 @@ def add_checkbox_with_upload(label, key_prefix):
         return '-'
     
 def handle_file_upload(label, key_prefix):
+    global files
     st.text(f'Please upload a copy of your {label}')
     uploaded_file = st.file_uploader(f"Upload {label}", type=['pdf', 'jpg', 'jpeg', 'png', 'docx'], key=key_prefix)
     if uploaded_file is not None:
