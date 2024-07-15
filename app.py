@@ -1752,7 +1752,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
                         cell.value = pattern.sub(str(value), cell.value)
                         if 'p230' in cell.value:
                             cell.value = cell.value.replace('p230', '')  
-                            resized_image = resize_image_to_fit_cell(signature_path, 1000, 550)
+                            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
                             resized_image_path = 'resized_signature_image.png'
                             resized_image.save(resized_image_path)
                             img = XLImage(resized_image_path)
