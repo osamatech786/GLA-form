@@ -50,7 +50,7 @@ def app():
         title_ms = 'X'
 
 
-    first_name = st.text_input('First Name')
+    first_name = st.text_input('First Name', key="first_name")
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
 
@@ -544,12 +544,23 @@ def app():
         # Setting 'X' for chosen evidence type
         if unemployment_evidence == "A Letter or Document from JCP or DWP":
             jcp_dwp_val = 'X'
+            uploaded_file = st.file_uploader("Upload Document from JCP or DWP", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
         elif unemployment_evidence == "A written referral from a careers service":
             careers_service_val = 'X'
+            uploaded_file = st.file_uploader("Upload written referral from a careers service", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
         elif unemployment_evidence == "Third Party Verification or Referral form":
             third_party_val = 'X'
+            uploaded_file = st.file_uploader("Upload Third Party Verification or Referral form", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file is not None:
+                files.append(uploaded_file)
         elif unemployment_evidence == "Other (please specify)":
             other_evidence_val = st.text_input("Please specify other evidence")    
+
+        
 
     # Initialize economically inactive variables
     inactive_status_val, inactive_evidence_type_val, inactive_evidence_date_val = '-', '-', '-'
@@ -1652,20 +1663,17 @@ def app():
         exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
         
         mandatory_fields = []
-        '''# Append p1 to p10
-        mandatory_fields.extend([f'p{i}' for i in range(1, 11)])
-        # Append p50, p51, p52
-        mandatory_fields.extend(['p50', 'p51', 'p52'])'''
+        mandatory_fields.extend([f'p{i}' for i in range(1, 4)])
+        mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
 
         # Remove excluded fields from mandatory_fields
         mandatory_fields = [field for field in mandatory_fields if field not in exclude_fields]
-
-
 
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
             st.text(missing_fields)
+            
         else:        
             # Define input and output paths
             template_file = "ph gla.xlsx"
@@ -1819,6 +1827,6 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
-
+    st.markdown(scroll_script, unsafe_allow_html=True)
 if __name__ == '__main__':
     app()
