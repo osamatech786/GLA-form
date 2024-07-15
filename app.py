@@ -1704,7 +1704,7 @@ def app():
                 body = "GLA Form submitted. Please find attached files."
 
                 # Local file path
-                local_file_path = "Filled_GLA_AEB_start_forms_{family_name}.xlsx"  # Update this path to your local file
+                local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
 
                 # Send email with attachments
                 if files or local_file_path:
