@@ -1690,28 +1690,27 @@ def app():
                 # Multi Sheet Support
                 sheet_names = ['Eligibility', 'ILR']
 
-                replace_placeholders(template_file, modified_file,
-                                    placeholder_values, signature_path, sheet_names)
+                replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names)
                 # st.success(f"Template modified and saved as {modified_file}")
-                st.success('Form submitted successfully!')
+                # st.success('Form submitted successfully!')
 
-                # Email
-                # Sender email credentials
-                sender_email = st.secrets["sender_email"]
-                sender_password = st.secrets["sender_password"]
-                receiver_email = sender_email
-                subject = f"GLA Form Submission {family_name}"
-                body = "GLA Form submitted. Please find attached files."
+                # # Email
+                # # Sender email credentials
+                # sender_email = st.secrets["sender_email"]
+                # sender_password = st.secrets["sender_password"]
+                # receiver_email = sender_email
+                # subject = f"GLA Form Submission {family_name}"
+                # body = "GLA Form submitted. Please find attached files."
 
-                # Local file path
-                local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
+                # # Local file path
+                # local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
 
-                # Send email with attachments
-                if files or local_file_path:
-                    send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
-                    st.success("Email sent successfully!")
-                else:
-                    st.warning("Please upload at least one file or specify a local file.")
+                # # Send email with attachments
+                # if files or local_file_path:
+                #     send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
+                #     st.success("Response sent successfully!")
+                # else:
+                #     st.warning("Please upload at least one file or specify a local file.")
             
             else:
                 st.warning("Please draw your signature.")
@@ -1753,7 +1752,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
                         cell.value = pattern.sub(str(value), cell.value)
                         if 'p230' in cell.value:
                             cell.value = cell.value.replace('p230', '')  
-                            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
+                            resized_image = resize_image_to_fit_cell(signature_path, 1000, 550)
                             resized_image_path = 'resized_signature_image.png'
                             resized_image.save(resized_image_path)
                             img = XLImage(resized_image_path)
