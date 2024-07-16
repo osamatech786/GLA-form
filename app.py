@@ -1696,23 +1696,23 @@ def app():
                 # st.success(f"Template modified and saved as {modified_file}")
                 # st.success('Form submitted successfully!')
 
-                # # Email
-                # # Sender email credentials
-                # sender_email = st.secrets["sender_email"]
-                # sender_password = st.secrets["sender_password"]
-                # receiver_email = sender_email
-                # subject = f"GLA Form Submission {family_name}"
-                # body = "GLA Form submitted. Please find attached files."
+                # Email
+                # Sender email credentials
+                sender_email = st.secrets["sender_email"]
+                sender_password = st.secrets["sender_password"]
+                receiver_email = sender_email
+                subject = f"GLA Form Submission {family_name}"
+                body = "GLA Form submitted. Please find attached files."
 
-                # # Local file path
-                # local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
+                # Local file path
+                local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
 
-                # # Send email with attachments
-                # if files or local_file_path:
-                #     send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
-                #     st.success("Response sent successfully!")
-                # else:
-                #     st.warning("Please upload at least one file or specify a local file.")
+                # Send email with attachments
+                if files or local_file_path:
+                    send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
+                    st.success("Response sent successfully!")
+                else:
+                    st.warning("Please upload at least one file or specify a local file.")
             
             else:
                 st.warning("Please draw your signature.")
@@ -1740,7 +1740,7 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
 
     # Open the Excel application
     app = xw.App(visible=False)
-    
+
     try:
         # Open the workbook
         wb = app.books.open(modified_file)
@@ -1754,21 +1754,26 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
             if used_range is None or used_range.last_cell is None:
                 print(f"No used range found in sheet: {sheet_name}")
                 continue
-            
-            max_row = used_range.last_cell.row
-            max_col = used_range.last_cell.column
 
-            # Store updated values in a dict to minimize cell access
-            updates = {}
+            data = sheet.range((1, 1), (used_range.last_cell.row, used_range.last_cell.column)).value
 
-            for row in range(1, max_row + 1):
-                for col in range(1, max_col + 1):
-                    cell = sheet.cells(row, col)
-                    cell_value = cell.value
+            # Check if data is a list of lists
+            if not isinstance(data, list):
+                continue
+            if not all(isinstance(row, list) for row in data):
+                continue
 
+            updated_data = []
+
+            # Placeholder to coordinate mapping for images
+            image_coords = []
+
+            for row_idx, row in enumerate(data):
+                updated_row = []
+                for col_idx, cell_value in enumerate(row):
                     if cell_value and isinstance(cell_value, str):
                         original_cell_value = cell_value  # Keep the original value for comparison
-                        
+
                         for placeholder, value in placeholder_values.items():
                             pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
                             cell_value = pattern.sub(str(value), cell_value)
@@ -1777,23 +1782,30 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
                         if 'p230' in cell_value:
                             cell_value = cell_value.replace('p230', '')
 
-                            # Resize and save image
-                            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
-                            resized_image_path = os.path.abspath('resized_signature_image.png')
-                            resized_image.save(resized_image_path)
-
-                            # Add the image to the sheet
-                            if os.path.exists(resized_image_path):
-                                sheet.pictures.add(resized_image_path, 
-                                                   left=cell.left, top=cell.top)
+                            # Add coordinates for image placement
+                            image_coords.append((row_idx + 1, col_idx + 1))
 
                         # Update cell value if modified
                         if cell_value != original_cell_value:
-                            updates[(row, col)] = cell_value
+                            updated_row.append(cell_value)
+                        else:
+                            updated_row.append(original_cell_value)
+                    else:
+                        updated_row.append(cell_value)
+                updated_data.append(updated_row)
 
-            # Apply updates in bulk
-            for (row, col), value in updates.items():
-                sheet.cells(row, col).value = value
+            # Update the sheet in bulk
+            sheet.range((1, 1), (used_range.last_cell.row, used_range.last_cell.column)).value = updated_data
+
+            # Resize and save image
+            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
+            resized_image_path = os.path.abspath('resized_signature_image.png')
+            resized_image.save(resized_image_path)
+
+            # Add the image to the sheet
+            if os.path.exists(resized_image_path):
+                for row, col in image_coords:
+                    sheet.pictures.add(resized_image_path, left=sheet.cells(row, col).left, top=sheet.cells(row, col).top)
 
         # Save the workbook
         wb.save()
