@@ -766,8 +766,8 @@ def app():
     st.header('E01: Right to Live and Work in the UK')
 
     # var initialize
-    hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', ''
-    not_nationality, passport_non_eu, letter_uk_immigration, passport_endorsed, identity_card, country_of_issue, id_document_reference_number, e01_date_of_issue, e01_date_of_expiry, e01_additional_notes ='', '', '', '', '', '', '', '', '', ''
+    hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '-', '-', '-'
+    not_nationality, passport_non_eu, letter_uk_immigration, passport_endorsed, identity_card, country_of_issue, id_document_reference_number, e01_date_of_issue, e01_date_of_expiry, e01_additional_notes ='-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
 
     # Create a radio button for the Yes/No question
     british_or_not = st.radio(
@@ -775,6 +775,8 @@ def app():
         ('Yes', 'No')
     )
 
+    nationality='-'
+    full_uk_passport, full_eu_passport, national_identity_card = '-', '-', '-'
     if british_or_not == 'Yes':
         nationality = st.text_input('Nationality')
         options = [
@@ -783,7 +785,6 @@ def app():
             'National Identity Card (EU)'
         ]
         selected_option_nationality = st.radio("Select the type of document:", options)
-        full_uk_passport, full_eu_passport, national_identity_card = '', '', ''
 
         if selected_option_nationality == options[0]:
             full_uk_passport, full_eu_passport, national_identity_card = 'X', '', ''
@@ -897,7 +898,7 @@ def app():
             label="Date of Expiry",
             value=datetime(2000, 1, 1),  # Default date
             min_value=date(1900, 1, 1),  # Minimum selectable date
-            max_value=date(2025, 12, 31),  # Maximum selectable date
+            max_value=date(2050, 12, 31),  # Maximum selectable date
             help="Choose a date"  # Tooltip text
         )
 
@@ -1695,6 +1696,16 @@ def app():
             'p62': p62,
             'p63': p63,
             'p64': p64,
+
+            'p60z' : p60z,
+            'p60a' : p60a,
+            'p61z' : p61z,
+            'p61a' : p61a,
+            'p63z' : p63z,
+            'p63a' : p63a,
+            'p63b' : p63b,
+
+
             # 'p65': p65,
             # 'p66': p66,
             # 'p67': p67,
