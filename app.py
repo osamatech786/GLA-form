@@ -14,6 +14,10 @@ import os
 from dotenv import load_dotenv
 
 files=list()
+# mandatory fields validation
+exclude_fields = {}     
+mandatory_fields = []
+
 
 def app():
     st.set_page_config(
@@ -35,6 +39,7 @@ def app():
 
     st.image('header/header-GLA.png', use_column_width=True)
 
+    global mandatory_fields
 
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
@@ -57,6 +62,7 @@ def app():
     first_name = st.text_input('First Name', key="first_name")
     middle_name = st.text_input('Middle Name')
     family_name = st.text_input('Family Name')
+    mandatory_fields.extend([f'p{i}' for i in range(1, 4)]) 
 
     # Initialize gender variables
     gender_m, gender_f, other_gender, other_gender_text = '', '', '', ''
@@ -70,6 +76,7 @@ def app():
     elif gender == "Other":
         other_gender =  'X'
         other_gender_text = st.text_input("If Other, please state")
+        mandatory_fields.extend(['p117'])
     
     date_of_birth = st.date_input(
     label="Date of Birth",
@@ -176,6 +183,7 @@ def app():
     next_of_kin = st.text_input("Next of kin/Emergency contact")
     emergency_contact_phone_number = st.text_input("Emergency Contact Phone Number")
 
+    mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
 
     # Household Situation Section
     st.header('Household Situation')
@@ -221,6 +229,15 @@ def app():
             st.write(selected)
     else:
         st.write('No options selected.')
+
+    # Check if at least one checkbox is selected
+    if any(household_selections.values()):
+        household_filled = 'filled'
+    else:
+        household_filled = ''
+
+    # Extend the mandatory_fields list with the household_filled variable
+    mandatory_fields.extend(['p300'])
 
 
     # LLDD, Health Problems, Other Disadvantaged Section
@@ -437,6 +454,7 @@ def app():
         ex_offender_n = 'N'
     elif ex_offender == "Choose not to say":
         ex_offender_choose_not_to_say = 'Choose not to say'
+    
 
     st.subheader('Other disadvantaged - Homeless?')
     homeless = st.radio('', ['Y', 'N', 'Choose not to say'], key='homeless')
@@ -449,6 +467,7 @@ def app():
         homeless_n = 'N'
     elif homeless == "Choose not to say":
         homeless_choose_not_to_say = 'Choose not to say'
+
 
     # Referral Source Section
     st.header('Referral Source')
@@ -489,8 +508,18 @@ def app():
     promotional_material_val = 'X' if promotional_material else ''
 
 
-    
-
+    # mandatory validation
+    referrall=''
+    if (internally_sourced_val=='X' or 
+        recommendation_val=='X' or 
+        event_val=='X' or self_referral_val=='X' or 
+        family_friends_val=='X' or other_val=='X' or 
+        website_val=='X' or 
+        promotional_material_val=='X'
+        ):
+        referrall='filled'
+    mandatory_fields.extend(['p304'])
+   
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
 
@@ -889,7 +918,8 @@ def app():
     state_benefits_letter = add_checkbox_with_upload('State Benefits Letter* (showing DOB)', 'state_benefits_letter')
     pension_statement = add_checkbox_with_upload('Pension Statement* (showing DOB)', 'pension_statement')
     northern_ireland_voters_card = add_checkbox_with_upload('Northern Ireland voters card', 'northern_ireland_voters_card')
-
+    
+    e02_other_evidence_text=''
     e02_other_evidence_text = st.text_input('Other Evidence: Please state type')
 
     # Validation for the last 3 months
@@ -910,6 +940,27 @@ def app():
         st.stop()
     st.success("The date of issue is within the last 3 months.")
     
+    # Validation for mandatory field
+    documents = [
+    full_passport_eu,
+    national_id_card_eu,
+    firearms_certificate,
+    birth_adoption_certificate,
+    e02_drivers_license,
+    edu_institution_letter,
+    e02_employment_contract,
+    state_benefits_letter,
+    pension_statement,
+    northern_ireland_voters_card
+    ]
+
+    # Check if at least one of the variables is 'X' or if e02_other_evidence_text is not empty
+    if any(doc == 'X' for doc in documents) or e02_other_evidence_text != '':
+        e02_filled='Filled'
+    else:
+        e02_filled=''
+    mandatory_fields.extend(['p301'])
+    
 
     st.header('E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months')
 
@@ -922,6 +973,7 @@ def app():
     electoral_role_evidence = add_checkbox_with_upload('Electoral Role registration evidence*', 'electoral_role_evidence')
     homeowner_letter = add_checkbox_with_upload('Letter/confirmation from homeowner (family/lodging)', 'homeowner_letter')
 
+    e03_other_evidence_text=''
     e03_other_evidence_text = st.text_input('Other Evidence: Please state type', key='e03_other_evidence')
 
     # Validation for the last 3 months
@@ -939,6 +991,25 @@ def app():
         st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
         st.stop()
     st.success("The date of issue is within the last 3 months.")
+
+    # Validation for mandatory field
+    documents = [
+        e03_drivers_license,
+        bank_statement,
+        e03_pension_statement,
+        mortgage_statement,
+        utility_bill,
+        council_tax_statement,
+        electoral_role_evidence,
+        homeowner_letter,
+    ]
+
+    # Check if at least one of the variables is 'X' or if e02_other_evidence_text is not empty
+    if any(doc == 'X' for doc in documents) or e03_other_evidence_text != '':
+        e03_filled='Filled'
+    else:
+        e03_filled=''
+    mandatory_fields.extend(['p302'])
 
     st.header('E04: Employment Status (please select one option from below and take a copy)')
 
@@ -1255,6 +1326,11 @@ def app():
     selected_levels = st.multiselect(
         'Select the highest level of education at start', education_options)
 
+    # mandatory field validation
+    if len(selected_levels)==0:
+        mandatory_fields.extend(['p303'])
+        pass
+
     # Initialize marks
     p93, p94, p95, p96, p97, p98 = '-', '-', '-', '-', '-', '-'
 
@@ -1296,6 +1372,7 @@ def app():
         'What are the barriers to achieving your career aspirations and goals?'
     )
 
+    mandatory_fields.extend([f'p{i}' for i in range(99, 103)])
 
     # st.subheader('Courses/Programs Available')
     # courses_programs_available = st.text_area(
@@ -1355,7 +1432,7 @@ def app():
 
 
     st.subheader('Participant Declaration')
-    participant_declaration = st.text_area(
+    st.text_area(
         'Participant Declaration',
         'I certify that I have provided all of the necessary information to confirm my eligibility for the Funded Provision.'
     )
@@ -1584,7 +1661,7 @@ def app():
             'p28': e02_employment_contract,
             'p29': state_benefits_letter,
             'p30': pension_statement,
-            'p31': northern_ireland_voters_card,
+            'p31':  northern_ireland_voters_card,
             'p32': e02_other_evidence_text,
             'p33': e02_date_of_issue,
             'p34': e03_drivers_license,
@@ -1659,14 +1736,22 @@ def app():
             # 'p103': courses_programs_available,
             # 'p113': participant_signature,
             'p231': date_signed,
-        }
+            
+            # for validation
+            'p300': household_filled,
+            'p301': e02_filled,
+            'p302': e03_filled,
+            'p303': len(selected_levels),
+            'p304': referrall,
+            
 
-        # mandatory fields validation
-        exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
+        }
         
-        mandatory_fields = []
-        mandatory_fields.extend([f'p{i}' for i in range(1, 4)])
-        mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
+        # mandatory fields validation
+        
+        # exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
+        
+        # mandatory_fields.extend([f'p{i}' for i in range(0, 0)])
 
         # Remove excluded fields from mandatory_fields
         mandatory_fields = [field for field in mandatory_fields if field not in exclude_fields]
@@ -1693,8 +1778,6 @@ def app():
                 sheet_names = ['Eligibility', 'ILR']
 
                 replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names)
-                # st.success(f"Template modified and saved as {modified_file}")
-                # st.success('Form submitted successfully!')
 
                 # Email
                 # Sender email credentials
@@ -1729,7 +1812,7 @@ def validate_inputs(inputs, mandatory_fields):
     """Check if all mandatory input fields are filled and return the list of missing fields."""
     missing_fields = []
     for key, value in inputs.items():
-        if key in mandatory_fields and (value is None or value == ''):
+        if key in mandatory_fields and (value is None or value == '' or value == 0):
             missing_fields.append(key)
     return missing_fields
 
