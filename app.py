@@ -11,6 +11,9 @@ from email.message import EmailMessage
 from datetime import date, timedelta
 import xlwings as xw
 import os
+from dotenv import load_dotenv
+
+files=list()
 
 def app():
     st.set_page_config(
@@ -32,7 +35,6 @@ def app():
 
     st.image('header/header-GLA.png', use_column_width=True)
 
-    files=list()
 
     st.title('Welcome')
     st.subheader('Please fill out the following details:')
@@ -874,10 +876,8 @@ def app():
                                             'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
         
 
-    
+
     st.header('E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)')
-
-
 
     full_passport_eu = add_checkbox_with_upload('Full Passport (EU Member State)', 'full_passport_eu')
     national_id_card_eu = add_checkbox_with_upload('National ID Card (EU)', 'national_id_card_eu')
@@ -1698,8 +1698,13 @@ def app():
 
                 # Email
                 # Sender email credentials
-                sender_email = st.secrets["sender_email"]
-                sender_password = st.secrets["sender_password"]
+                # sender_email = st.secrets["sender_email"]
+                # sender_password = st.secrets["sender_password"]
+
+                load_dotenv()
+                sender_email = os.getenv('EMAIL')
+                sender_password = os.getenv('PASSWORD')
+
                 receiver_email = sender_email
                 subject = f"GLA Form Submission {family_name}"
                 body = "GLA Form submitted. Please find attached files."
@@ -1865,7 +1870,8 @@ def add_checkbox_with_upload(label, key_prefix):
         return 'X'
     else:
         return '-'
-    
+
+# Function to handle file upload
 def handle_file_upload(label, key_prefix):
     global files
     st.text(f'Please upload a copy of your {label}')
@@ -1875,7 +1881,7 @@ def handle_file_upload(label, key_prefix):
         return 'X'
     else:
         return '-'
-    
+        
 def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
