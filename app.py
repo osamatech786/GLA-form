@@ -9,6 +9,8 @@ from datetime import datetime, date
 import smtplib
 from email.message import EmailMessage
 from datetime import date, timedelta
+import xlwings as xw
+import os
 
 def app():
     st.set_page_config(
@@ -1736,30 +1738,71 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
     # Copy the template file to a new file
     shutil.copy(template_file, modified_file)
 
-    # Load the new copied workbook
-    wb = load_workbook(modified_file)
+    # Open the Excel application
+    app = xw.App(visible=False)
+    
+    try:
+        # Open the workbook
+        wb = app.books.open(modified_file)
 
-    for sheet_name in sheet_names:
-        sheet = wb[sheet_name]
+        for sheet_name in sheet_names:
+            sheet = wb.sheets[sheet_name]
+            print(f"Processing sheet: {sheet_name}")
 
-        # Replace placeholders with provided values or images
-        for row in sheet.iter_rows():
-            for cell in row:
-                if isinstance(cell.value, str):
-                    for placeholder, value in placeholder_values.items():
-                        # Use regular expressions to find full placeholder word
-                        pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
-                        cell.value = pattern.sub(str(value), cell.value)
-                        if 'p230' in cell.value:
-                            cell.value = cell.value.replace('p230', '')  
+            # Get the used range of the sheet
+            used_range = sheet.used_range
+            if used_range is None or used_range.last_cell is None:
+                print(f"No used range found in sheet: {sheet_name}")
+                continue
+            
+            max_row = used_range.last_cell.row
+            max_col = used_range.last_cell.column
+
+            # Store updated values in a dict to minimize cell access
+            updates = {}
+
+            for row in range(1, max_row + 1):
+                for col in range(1, max_col + 1):
+                    cell = sheet.cells(row, col)
+                    cell_value = cell.value
+
+                    if cell_value and isinstance(cell_value, str):
+                        original_cell_value = cell_value  # Keep the original value for comparison
+                        
+                        for placeholder, value in placeholder_values.items():
+                            pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
+                            cell_value = pattern.sub(str(value), cell_value)
+
+                        # Check for 'p230' and replace it
+                        if 'p230' in cell_value:
+                            cell_value = cell_value.replace('p230', '')
+
+                            # Resize and save image
                             resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
-                            resized_image_path = 'resized_signature_image.png'
+                            resized_image_path = os.path.abspath('resized_signature_image.png')
                             resized_image.save(resized_image_path)
-                            img = XLImage(resized_image_path)
-                            sheet.add_image(img, cell.coordinate)
 
-    # Save the workbook
-    wb.save(modified_file)
+                            # Add the image to the sheet
+                            if os.path.exists(resized_image_path):
+                                sheet.pictures.add(resized_image_path, 
+                                                   left=cell.left, top=cell.top)
+
+                        # Update cell value if modified
+                        if cell_value != original_cell_value:
+                            updates[(row, col)] = cell_value
+
+            # Apply updates in bulk
+            for (row, col), value in updates.items():
+                sheet.cells(row, col).value = value
+
+        # Save the workbook
+        wb.save()
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        wb.close()
+        app.quit()
 
     # file download button
     with open(modified_file, 'rb') as f:
