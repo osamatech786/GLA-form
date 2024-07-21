@@ -1,17 +1,18 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 import shutil
-from openpyxl import load_workbook
 import re
 from PIL import Image as PILImage
-from openpyxl.drawing.image import Image as XLImage
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+import time
 import smtplib
 from email.message import EmailMessage
-from datetime import date, timedelta
-import xlwings as xw
 import os
-from dotenv import load_dotenv
+from docx import Document
+from docx.shared import Inches
+# from dotenv import load_dotenv
+
+
 
 files=list()
 # mandatory fields validation
@@ -60,9 +61,9 @@ def app():
 
 
     first_name = st.text_input('First Name', key="first_name")
-    middle_name = st.text_input('Middle Name')
-    family_name = st.text_input('Family Name')
-    mandatory_fields.extend([f'p{i}' for i in range(1, 4)]) 
+    middle_name = st.text_input('Middle Name', key="middle_name")
+    family_name = st.text_input('Family Name', key="family_name")
+    # mandatory_fields.extend([f'p{i}' for i in range(1, 4)]) 
 
     # Initialize gender variables
     gender_m, gender_f, other_gender, other_gender_text = '', '', '', ''
@@ -76,7 +77,7 @@ def app():
     elif gender == "Other":
         other_gender =  'X'
         other_gender_text = st.text_input("If Other, please state")
-        mandatory_fields.extend(['p117'])
+        # mandatory_fields.extend(['p117'])
     
     date_of_birth = st.date_input(
     label="Date of Birth",
@@ -183,7 +184,7 @@ def app():
     next_of_kin = st.text_input("Next of kin/Emergency contact")
     emergency_contact_phone_number = st.text_input("Emergency Contact Phone Number")
 
-    mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
+    # mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
 
     # Household Situation Section
     st.header('Household Situation')
@@ -237,7 +238,7 @@ def app():
         household_filled = ''
 
     # Extend the mandatory_fields list with the household_filled variable
-    mandatory_fields.extend(['p300'])
+    # mandatory_fields.extend(['p300'])
 
 
     # LLDD, Health Problems, Other Disadvantaged Section
@@ -245,7 +246,7 @@ def app():
 
     # Long term disability, health problem, or learning difficulties
     st.subheader('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
-    disability = st.radio('Choose the correct option:', ['Y', 'N'])
+    disability = st.radio('Choose the correct option:', ['Y', 'N'], index=0)
     # Initialize variables for disability options
     has_disability, no_disability = '', ''
     # Set variables based on user selection
@@ -518,7 +519,7 @@ def app():
         promotional_material_val=='X'
         ):
         referrall='filled'
-    mandatory_fields.extend(['p304'])
+    # mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
@@ -960,7 +961,7 @@ def app():
         e02_filled='Filled'
     else:
         e02_filled=''
-    mandatory_fields.extend(['p301'])
+    # mandatory_fields.extend(['p301'])
     
 
     st.header('E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months')
@@ -1010,7 +1011,7 @@ def app():
         e03_filled='Filled'
     else:
         e03_filled=''
-    mandatory_fields.extend(['p302'])
+    # mandatory_fields.extend(['p302'])
 
     st.header('E04: Employment Status (please select one option from below and take a copy)')
 
@@ -1329,7 +1330,7 @@ def app():
 
     # mandatory field validation
     if len(selected_levels)==0:
-        mandatory_fields.extend(['p303'])
+        # mandatory_fields.extend(['p303'])
         pass
 
     # Initialize marks
@@ -1373,7 +1374,7 @@ def app():
         'What are the barriers to achieving your career aspirations and goals?'
     )
 
-    mandatory_fields.extend([f'p{i}' for i in range(99, 103)])
+    # mandatory_fields.extend([f'p{i}' for i in range(99, 103)])
 
     # st.subheader('Courses/Programs Available')
     # courses_programs_available = st.text_area(
@@ -1758,11 +1759,13 @@ def app():
 
         }
         
+        # progress_bar(5)
+
         # mandatory fields validation
         
         # exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
         
-        # mandatory_fields.extend([f'p{i}' for i in range(0, 0)])
+        mandatory_fields.extend([f'p{i}' for i in range(0, 0)])
 
         # Remove excluded fields from mandatory_fields
         mandatory_fields = [field for field in mandatory_fields if field not in exclude_fields]
@@ -1772,10 +1775,10 @@ def app():
             st.warning(f"Please fill out all the fields.")
             st.text(missing_fields)
             
-        else:        
+        else:   
             # Define input and output paths
-            template_file = "ph gla.xlsx"
-            modified_file = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx"
+            template_file = "ph gla.docx"
+            modified_file = f"Filled_GLA_AEB_start_forms_{family_name}.docx"      
 
             if len(participant_signature.json_data['objects']) != 0:
                 # Convert the drawing to a PIL image and save it
@@ -1783,36 +1786,38 @@ def app():
                 signature_image = PILImage.fromarray(
                     participant_signature.image_data.astype('uint8'), 'RGBA')
                 signature_image.save(signature_path)
-                # st.success("Signature image saved!")
 
-                # Multi Sheet Support
-                sheet_names = ['Eligibility', 'ILR']
-
-                replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names)
+                replace_placeholders(template_file, modified_file, placeholder_values, signature_path)
 
                 # Email
-                # Sender email credentials
-                # sender_email = st.secrets["sender_email"]
-                # sender_password = st.secrets["sender_password"]
 
-                load_dotenv()
-                sender_email = os.getenv('EMAIL')
-                sender_password = os.getenv('PASSWORD')
+                # Sender email credentials
+
+                # Credentials: Streamlit host st.secrets
+                sender_email = st.secrets["sender_email"]
+                sender_password = st.secrets["sender_password"]
+
+                # Credentials: Local env
+                # load_dotenv()                                     # uncomment import of this library!
+                # sender_email = os.getenv('EMAIL')
+                # sender_password = os.getenv('PASSWORD')
 
                 receiver_email = sender_email
-                subject = f"GLA Form Submission {family_name}"
+                # receiver_email = 'mohamedr@prevista.co.uk'
+                
+                subject = f"GLA Form Submission: {family_name} {date.today()}"
                 body = "GLA Form submitted. Please find attached files."
 
                 # Local file path
-                local_file_path = f"Filled_GLA_AEB_start_forms_{family_name}.xlsx" 
+                local_file_path = modified_file
 
                 # Send email with attachments
                 if files or local_file_path:
-                    send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
+                    # send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path)
                     st.success("Response sent successfully!")
                 else:
                     st.warning("Please upload at least one file or specify a local file.")
-            
+        
             else:
                 st.warning("Please draw your signature.")
 
@@ -1827,93 +1832,140 @@ def validate_inputs(inputs, mandatory_fields):
             missing_fields.append(key)
     return missing_fields
 
-def resize_image_to_fit_cell(image_path, max_width, max_height):
-    with PILImage.open(image_path) as img:
-        img.thumbnail((max_width, max_height), PILImage.Resampling.LANCZOS)
-        return img
+def resize_image_to_fit_cell(image, max_width, max_height):
+    width, height = image.size
+    aspect_ratio = width / height
+
+    if width > max_width:
+        width = max_width
+        height = int(width / aspect_ratio)
+
+    if height > max_height:
+        height = max_height
+        width = int(height * aspect_ratio)
+
+    return image.resize((width, height))
 
 
-def replace_placeholders(template_file, modified_file, placeholder_values, signature_path, sheet_names):
-    # Copy the template file to a new file
-    shutil.copy(template_file, modified_file)
-
-    # Open the Excel application
-    app = xw.App(visible=False)
-
+def replace_placeholders(template_file, modified_file, placeholder_values, signature_path):
     try:
-        # Open the workbook
-        wb = app.books.open(modified_file)
+        print(f"Copying template file '{template_file}' to '{modified_file}'...")
+        shutil.copy(template_file, modified_file)
 
-        for sheet_name in sheet_names:
-            sheet = wb.sheets[sheet_name]
-            print(f"Processing sheet: {sheet_name}")
+        print(f"Opening document '{modified_file}'...")
+        doc = Document(modified_file)
 
-            # Get the used range of the sheet
-            used_range = sheet.used_range
-            if used_range is None or used_range.last_cell is None:
-                print(f"No used range found in sheet: {sheet_name}")
-                continue
+        # Function to convert value to string, handling datetime.date objects
+        def convert_to_str(value):
+            if isinstance(value, date):
+                return value.strftime('%Y-%m-%d')  # Convert date to string
+            return str(value)  # Convert other types to string
 
-            data = sheet.range((1, 1), (used_range.last_cell.row, used_range.last_cell.column)).value
+        # Compile regular expressions for all placeholders
+        placeholders = {re.escape(key): convert_to_str(value) for key, value in placeholder_values.items()}
+        placeholders_pattern = re.compile(r'\b(' + '|'.join(placeholders.keys()) + r')\b')
 
-            # Check if data is a list of lists
-            if not isinstance(data, list):
-                continue
-            if not all(isinstance(row, list) for row in data):
-                continue
+        # Replace placeholders in paragraphs
+        print("Replacing placeholders in paragraphs...")
+        for para in doc.paragraphs:
+            original_text = para.text
+            updated_text = placeholders_pattern.sub(lambda match: placeholders[re.escape(match.group(0))], para.text)
+            if original_text != updated_text:
+                print(f"Updated paragraph text: '{original_text}' -> '{updated_text}'")
+                para.text = updated_text
 
-            updated_data = []
+        # Replace placeholders in tables
+        print("Replacing placeholders in tables...")
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    for para in cell.paragraphs:
+                        original_text = para.text
+                        updated_text = placeholders_pattern.sub(lambda match: placeholders[re.escape(match.group(0))], para.text)
+                        if original_text != updated_text:
+                            print(f"Updated table cell text: '{original_text}' -> '{updated_text}'")
+                            para.text = updated_text
 
-            # Placeholder to coordinate mapping for images
-            image_coords = []
+                    # Inspect cell runs
+                    for para in cell.paragraphs:
+                        for run in para.runs:
+                            run_text = run.text
+                            run_updated_text = placeholders_pattern.sub(lambda match: placeholders[re.escape(match.group(0))], run_text)
+                            if run_text != run_updated_text:
+                                print(f"Updated run text in table cell: '{run_text}' -> '{run_updated_text}'")
+                                run.text = run_updated_text
 
-            for row_idx, row in enumerate(data):
-                updated_row = []
-                for col_idx, cell_value in enumerate(row):
-                    if cell_value and isinstance(cell_value, str):
-                        original_cell_value = cell_value  # Keep the original value for comparison
+        # Check and handle signature placeholder
+        print("Inspecting document for 'p230' placeholder...")
+        signature_placeholder_found = False
 
-                        for placeholder, value in placeholder_values.items():
-                            pattern = re.compile(r'\b' + re.escape(placeholder) + r'\b')
-                            cell_value = pattern.sub(str(value), cell_value)
+        # Check paragraphs
+        for para in doc.paragraphs:
+            para_text = para.text.strip()  # Remove any extra spaces around text
+            while 'p230' in para_text:
+                print(f"Found 'p230' in paragraph: '{para_text}'")
+                para_text = para_text.replace('p230', '').strip()  # Remove 'p230' and any leading/trailing spaces
+                para.text = para_text
+                resized_image_path = 'resized_signature_image.png'
+                
+                try:
+                    # Open and resize the image
+                    print(f"Opening image file: {signature_path}")
+                    resized_image = PILImage.open(signature_path)
+                    print(f"Original image size: {resized_image.size}")
+                    resized_image = resize_image_to_fit_cell(resized_image, 200, 50)
+                    resized_image.save(resized_image_path)  # Save resized image to a file
+                    print(f"Resized image saved to: {resized_image_path}")
+                    
+                    # Add picture to the paragraph
+                    print(f"Adding picture to paragraph from path: {resized_image_path}")
+                    para.add_run().add_picture(resized_image_path, width=Inches(2))
+                    print("Inserted signature image into paragraph.")
+                    signature_placeholder_found = True
+                except Exception as img_e:
+                    print(f"An error occurred with image processing: {img_e}")
 
-                        # Check for 'p230' and replace it
-                        if 'p230' in cell_value:
-                            cell_value = cell_value.replace('p230', '')
+        # Check table cells again in case the placeholder was missed
+        if not signature_placeholder_found:
+            print("Checking table cells for 'p230'...")
+            for table in doc.tables:
+                for row in table.rows:
+                    for cell in row.cells:
+                        for para in cell.paragraphs:
+                            para_text = para.text.strip()
+                            while 'p230' in para_text:
+                                print(f"Found 'p230' in table cell paragraph: '{para_text}'")
+                                para_text = para_text.replace('p230', '').strip()
+                                para.text = para_text
+                                resized_image_path = 'resized_signature_image.png'
+                                
+                                try:
+                                    # Open and resize the image
+                                    print(f"Opening image file: {signature_path}")
+                                    resized_image = PILImage.open(signature_path)
+                                    print(f"Original image size: {resized_image.size}")
+                                    resized_image = resize_image_to_fit_cell(resized_image, 200, 50)
+                                    resized_image.save(resized_image_path)  # Save resized image to a file
+                                    print(f"Resized image saved to: {resized_image_path}")
+                                    
+                                    # Add picture to the table cell
+                                    print(f"Adding picture to table cell from path: {resized_image_path}")
+                                    para.add_run().add_picture(resized_image_path, width=Inches(2))
+                                    print("Inserted signature image into table cell.")
+                                    signature_placeholder_found = True
+                                except Exception as img_e:
+                                    print(f"An error occurred with image processing: {img_e}")
 
-                            # Add coordinates for image placement
-                            image_coords.append((row_idx + 1, col_idx + 1))
+        if not signature_placeholder_found:
+            print("No signature placeholder found.")
 
-                        # Update cell value if modified
-                        if cell_value != original_cell_value:
-                            updated_row.append(cell_value)
-                        else:
-                            updated_row.append(original_cell_value)
-                    else:
-                        updated_row.append(cell_value)
-                updated_data.append(updated_row)
-
-            # Update the sheet in bulk
-            sheet.range((1, 1), (used_range.last_cell.row, used_range.last_cell.column)).value = updated_data
-
-            # Resize and save image
-            resized_image = resize_image_to_fit_cell(signature_path, 200, 55)
-            resized_image_path = os.path.abspath('resized_signature_image.png')
-            resized_image.save(resized_image_path)
-
-            # Add the image to the sheet
-            if os.path.exists(resized_image_path):
-                for row, col in image_coords:
-                    sheet.pictures.add(resized_image_path, left=sheet.cells(row, col).left, top=sheet.cells(row, col).top)
-
-        # Save the workbook
-        wb.save()
+        # Save the modified document
+        print(f"Saving modified document '{modified_file}'...")
+        doc.save(modified_file)
+        print(f"Document modification complete: '{modified_file}'")
 
     except Exception as e:
         print(f"An error occurred: {e}")
-    finally:
-        wb.close()
-        app.quit()
 
     # file download button
     with open(modified_file, 'rb') as f:
@@ -1922,8 +1974,10 @@ def replace_placeholders(template_file, modified_file, placeholder_values, signa
             label="Download Your Response",
             data=file_contents,
             file_name=modified_file,
-            mime='application/octet-stream'
+            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         )
+
+
 
 # Function to send email with attachments (Handle Local + Uploaded)
 def send_email_with_attachments(sender_email, sender_password, receiver_email, subject, body, files, local_file_path=None):
@@ -1981,5 +2035,25 @@ def calculate_age(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
     st.markdown(scroll_script, unsafe_allow_html=True)
+
+def progress_bar(duration_seconds):
+    """Displays a progress bar that fills over the specified duration."""
+    progress_bar = st.progress(0)
+    
+    # Number of updates per second for smoother progress
+    updates_per_second = 20
+    # Time to wait between updates
+    sleep_time = 1 / updates_per_second
+    # Total number of updates
+    total_updates = duration_seconds * updates_per_second
+    
+    for i in range(total_updates + 1):
+        # Update the progress bar
+        progress = i / total_updates
+        progress_bar.progress(progress)
+        # Sleep for the calculated time
+        time.sleep(sleep_time)
+    # st.write("Progress complete!")
+
 if __name__ == '__main__':
     app()
