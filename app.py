@@ -1826,7 +1826,7 @@ def app():
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
-            # st.text(missing_fields)
+            st.text(missing_fields)
             
         else:   
             # Define input and output paths
