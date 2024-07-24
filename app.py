@@ -85,9 +85,12 @@ def app():
     min_value=date(1900, 1, 1),  # Minimum selectable date
     max_value=date(2025, 12, 31),  # Maximum selectable date
     key="date_input_widget",  # Unique key for the widget
-    help="Choose a date"  # Tooltip text
+    help="Choose a date",  # Tooltip text
+    format='DD/MM/YYYY'
 )
     current_age = calculate_age(date_of_birth)
+    date_of_birth = date_of_birth.strftime("%d-%m-%Y")
+    
     current_age_text='Current Age at Start of Programme: '+ str(current_age)
     st.text(current_age_text)
 
@@ -622,7 +625,8 @@ def app():
         inactive_status_val = 'Yes' if inactive_status == "Y" else 'No'
 
         inactive_evidence_type_val = st.text_input("Type of evidence for Economically Inactive Status including self-declaration statement.")
-        inactive_evidence_date_val = st.date_input("Date of issue of evidence")
+        inactive_evidence_date_val = st.date_input("Date of issue of evidence", format='DD/MM/YYYY')
+        inactive_evidence_date_val = inactive_evidence_date_val.strftime("%d-%m-%Y")
 
 
     # Initialize employment detail variables
@@ -704,7 +708,9 @@ def app():
                 other_benefit_val = st.text_input("Please state other benefit")
 
             # Input for the date of claim
-            benefit_claim_date_val = st.date_input("From what date has the above claim been in effect?")
+            benefit_claim_date_val = st.date_input("From what date has the above claim been in effect?", format='DD/MM/YYYY')
+            benefit_claim_date_val = benefit_claim_date_val.strftime("%d-%m-%Y")
+
 
 
     # # Detailed Learning Plan Section
@@ -901,16 +907,20 @@ def app():
             value=datetime(2000, 1, 1),  # Default date
             min_value=date(1900, 1, 1),  # Minimum selectable date
             max_value=date(2025, 12, 31),  # Maximum selectable date
-            help="Choose a date"  # Tooltip text
+            help="Choose a date",  # Tooltip text
+            format='DD/MM/YYYY'
         )
+        e01_date_of_issue = e01_date_of_issue.strftime("%d-%m-%Y")
 
         e01_date_of_expiry = st.date_input(
             label="Date of Expiry",
             value=datetime(2000, 1, 1),  # Default date
             min_value=date(1900, 1, 1),  # Minimum selectable date
             max_value=date(2050, 12, 31),  # Maximum selectable date
-            help="Choose a date"  # Tooltip text
+            help="Choose a date",  # Tooltip text
+            format='DD/MM/YYYY'
         )
+        e01_date_of_expiry = e01_date_of_expiry.strftime("%d-%m-%Y")
 
         e01_additional_notes = st.text_area('Additional Notes',
                                             'Use this space for additional notes where relevant (type of Visa, restrictions, expiry etc.)')
@@ -942,7 +952,8 @@ def app():
         value=date.today(),  # Default date
         min_value=date(1900, 1, 1),  # Minimum selectable date
         max_value=date(2025, 12, 31),  # Maximum selectable date
-        help="Choose a date"  # Tooltip text
+        help="Choose a date",  # Tooltip text
+        format='DD/MM/YYYY'
     )
 
     # Check if the selected date is within the last three months
@@ -951,6 +962,8 @@ def app():
         st.stop()
     st.success("The date of issue is within the last 3 months.")
     
+    e02_date_of_issue = e02_date_of_issue.strftime("%d-%m-%Y")
+
     # Validation for mandatory field
     documents = [
     full_passport_eu,
@@ -994,7 +1007,8 @@ def app():
         min_value=date(1900, 1, 1),  # Minimum selectable date
         max_value=date(2025, 12, 31),  # Maximum selectable date
         help="Choose a date",  # Tooltip text
-        key='e03_date_of_issue'
+        key='e03_date_of_issue',
+        format='DD/MM/YYYY'
     )
 
     # Check if the selected date is within the last three months
@@ -1002,6 +1016,7 @@ def app():
         st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
         st.stop()
     st.success("The date of issue is within the last 3 months.")
+    e03_date_of_issue = e03_date_of_issue.strftime("%d-%m-%Y")
 
     # Validation for mandatory field
     documents = [
@@ -1086,13 +1101,15 @@ def app():
         min_value=date(1900, 1, 1),  # Minimum selectable date
         max_value=date(2025, 12, 31),  # Maximum selectable date
         help="Choose a date",  # Tooltip text
-        key='e04_date_of_issue'
+        key='e04_date_of_issue',
+        format='DD/MM/YYYY'
     )
 
     if e04_date_of_issue < three_months_ago:
         st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
         st.stop()
     st.success("The date of issue is within the last 3 months.")
+    e04_date_of_issue = e04_date_of_issue.strftime("%d-%m-%Y")
 
     st.header('Details of Qualification or Training')
   
@@ -1511,8 +1528,11 @@ def app():
     value=date.today(),  # Default date
     min_value=date(1900, 1, 1),  # Minimum selectable date
     max_value=date(2025, 12, 31),  # Maximum selectable date
-    help="Choose a date"  # Tooltip text
+    help="Choose a date",  # Tooltip text
+    format='DD/MM/YYYY'
 )
+    date_signed = date_signed.strftime("%d-%m-%Y")
+    
 
 # ####################################################################################################################################
 
