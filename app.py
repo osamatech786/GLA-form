@@ -527,6 +527,7 @@ def app():
         jobcentre_plus_val == 'X' and
         len(specify_refereel)>0):
         referrall = 'filled'
+        st.write('LENGTH:', len(specify_refereel))
     mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
