@@ -63,7 +63,7 @@ def app():
     first_name = st.text_input('First Name', key="first_name")
     middle_name = st.text_input('Middle Name', key="middle_name")
     family_name = st.text_input('Family Name', key="family_name")
-    # mandatory_fields.extend([f'p{i}' for i in range(1, 4)]) 
+    mandatory_fields.extend([f'p{i}' for i in range(1, 4)]) 
 
     # Initialize gender variables
     gender_m, gender_f, other_gender, other_gender_text = '', '', '', ''
@@ -77,7 +77,7 @@ def app():
     elif gender == "Other":
         other_gender =  'X'
         other_gender_text = st.text_input("If Other, please state")
-        # mandatory_fields.extend(['p117'])
+        mandatory_fields.extend(['p117'])
     
     date_of_birth = st.date_input(
     label="Date of Birth",
@@ -184,7 +184,7 @@ def app():
     next_of_kin = st.text_input("Next of kin/Emergency contact")
     emergency_contact_phone_number = st.text_input("Emergency Contact Phone Number")
 
-    # mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
+    mandatory_fields.extend([f'p{i}' for i in range(137, 150)])
 
     # Household Situation Section
     st.header('Household Situation')
@@ -238,7 +238,7 @@ def app():
         household_filled = ''
 
     # Extend the mandatory_fields list with the household_filled variable
-    # mandatory_fields.extend(['p300'])
+    mandatory_fields.extend(['p300'])
 
 
     # LLDD, Health Problems, Other Disadvantaged Section
@@ -527,7 +527,7 @@ def app():
         jobcentre_plus_val == 'X' and
         len(specify_refereel)>0):
         referrall = 'filled'
-    # mandatory_fields.extend(['p304'])
+    mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
@@ -969,7 +969,7 @@ def app():
         e02_filled='Filled'
     else:
         e02_filled=''
-    # mandatory_fields.extend(['p301'])
+    mandatory_fields.extend(['p301'])
     
 
     st.header('E03: Proof of Residence (must show the address recorded on ILP) *within the last 3 months')
@@ -1019,7 +1019,7 @@ def app():
         e03_filled='Filled'
     else:
         e03_filled=''
-    # mandatory_fields.extend(['p302'])
+    mandatory_fields.extend(['p302'])
 
     st.header('E04: Employment Status (please select one option from below and take a copy)')
 
@@ -1337,7 +1337,7 @@ def app():
 
     # mandatory field validation
     if len(selected_levels)==0:
-        # mandatory_fields.extend(['p303'])
+        mandatory_fields.extend(['p303'])
         pass
 
     # Initialize marks
@@ -1385,7 +1385,7 @@ def app():
     #     'What are the barriers to achieving your career aspirations and goals?'
     # )
 
-    # mandatory_fields.extend([f'p{i}' for i in range(99, 103)])
+    mandatory_fields.extend([f'p{i}' for i in range(99, 103)])
 
     # st.subheader('Courses/Programs Available')
     # courses_programs_available = st.text_area(
@@ -1818,7 +1818,7 @@ def app():
         
         # exclude_fields = {'p1000', 'p1', 'p2', 'p3', 'p5', 'p7', 'p8', 'p10', 'p11', 'p12', 'p13', 'p15', 'p16', 'p17', 'p18', 'p32', 'p43', 'p73', 'p86', 'p87', 'p92', 'p99', 'p100', 'p101', 'p102', 'p103', 'p9', 'p14', 'p19', 'p20', 'p21', 'p111', 'p112', 'p113', 'p115', 'p116', 'p117', 'p119', 'p120', 'p121', 'p122', 'p123', 'p124', 'p125', 'p126', 'p127', 'p128', 'p129', 'p130', 'p131', 'p132', 'p133', 'p134', 'p135', 'p137', 'p138', 'p139', 'p140', 'p141', 'p142', 'p143', 'p144', 'p145', 'p146', 'p147', 'p148', 'p149', 'p150'}     # exclude fields
         
-        mandatory_fields.extend([f'p{i}' for i in range(0, 0)])
+        # mandatory_fields.extend([f'p{i}' for i in range(0, 0)])
 
         # Remove excluded fields from mandatory_fields
         mandatory_fields = [field for field in mandatory_fields if field not in exclude_fields]
@@ -1826,7 +1826,7 @@ def app():
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
-            st.text(missing_fields)
+            # st.text(missing_fields)
             
         else:   
             # Define input and output paths
