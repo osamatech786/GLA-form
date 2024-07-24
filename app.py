@@ -1828,6 +1828,7 @@ def app():
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
             st.text(missing_fields)
+            st.text('LENGTH:', len(specify_refereel))
             
         else:   
             # Define input and output paths
