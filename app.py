@@ -527,8 +527,8 @@ def app():
         jobcentre_plus_val == 'X' and
         len(specify_refereel)>0):
         referrall = 'filled'
-        st.write('LENGTH:', len(specify_refereel))
-    mandatory_fields.extend(['p304'])
+        # st.write('LENGTH:', len(specify_refereel))
+    # mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
@@ -1828,7 +1828,7 @@ def app():
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
             st.text(missing_fields)
-            st.text('LENGTH:', len(specify_refereel))
+            # st.text('LENGTH:', len(specify_refereel))
             
         else:   
             # Define input and output paths
