@@ -668,48 +668,50 @@ def app():
         employment_hours_val_0 = 'X' if employment_hours == "0-15 hrs per week" else '-' 
         employment_hours_val_6 = 'X' if employment_hours == "16+ hrs per week" else '-' 
 
-        claiming_benefits = st.radio("Are you claiming any benefits? If so, please describe below what they are.", ["Y", "N"])
-        claiming_benefits_val = 'Y' if claiming_benefits == "Y" else 'N'
 
-        
-        if claiming_benefits == "Y":
-            sole_claimant = st.radio("Are you the sole claimant of the benefit?", ["Y", "N"])
-            sole_claimant_val = 'Y' if sole_claimant == "Y" else 'N'
+    st.header("Benefits Detail")
+    claiming_benefits = st.radio("Are you claiming any benefits? If so, please describe below what they are.", ["N", "Y"])
+    claiming_benefits_val = 'Y' if claiming_benefits == "Y" else 'N'
+
+    
+    if claiming_benefits == "Y":
+        sole_claimant = st.radio("Are you the sole claimant of the benefit?", ["Y", "N"])
+        sole_claimant_val = 'Y' if sole_claimant == "Y" else 'N'
 
 
-            # Benefits List Section
-            benefits_list = st.multiselect(
-                "Select the benefits you are claiming:",
-                [
-                    "Universal Credit (UC)",
-                    "Job Seekers Allowance (JSA)",
-                    "Employment and Support Allowance (ESA)",
-                    "Incapacity Benefit (or any other sickness related benefit)",
-                    "Personal Independence Payment (PIP)",
-                    "Other - please state"
-                ]
-            )
+        # Benefits List Section
+        benefits_list = st.multiselect(
+            "Select the benefits you are claiming:",
+            [
+                "Universal Credit (UC)",
+                "Job Seekers Allowance (JSA)",
+                "Employment and Support Allowance (ESA)",
+                "Incapacity Benefit (or any other sickness related benefit)",
+                "Personal Independence Payment (PIP)",
+                "Other - please state"
+            ]
+        )
 
-            # Update the respective variables based on user selections
-            if "Universal Credit (UC)" in benefits_list:
-                universal_credit_val = 'X'
-            if "Job Seekers Allowance (JSA)" in benefits_list:
-                job_seekers_allowance_val = 'X'
-            if "Employment and Support Allowance (ESA)" in benefits_list:
-                employment_support_allowance_val = 'X'
-            if "Incapacity Benefit (or any other sickness related benefit)" in benefits_list:
-                incapacity_benefit_val = 'X'
-            if "Personal Independence Payment (PIP)" in benefits_list:
-                personal_independence_payment_val = 'X'
+        # Update the respective variables based on user selections
+        if "Universal Credit (UC)" in benefits_list:
+            universal_credit_val = 'X'
+        if "Job Seekers Allowance (JSA)" in benefits_list:
+            job_seekers_allowance_val = 'X'
+        if "Employment and Support Allowance (ESA)" in benefits_list:
+            employment_support_allowance_val = 'X'
+        if "Incapacity Benefit (or any other sickness related benefit)" in benefits_list:
+            incapacity_benefit_val = 'X'
+        if "Personal Independence Payment (PIP)" in benefits_list:
+            personal_independence_payment_val = 'X'
 
-            # Handle "Other - please state" input
-            other_benefit_val = ''
-            if "Other - please state" in benefits_list:
-                other_benefit_val = st.text_input("Please state other benefit")
+        # Handle "Other - please state" input
+        other_benefit_val = ''
+        if "Other - please state" in benefits_list:
+            other_benefit_val = st.text_input("Please state other benefit")
 
-            # Input for the date of claim
-            benefit_claim_date_val = st.date_input("From what date has the above claim been in effect?", format='DD/MM/YYYY')
-            benefit_claim_date_val = benefit_claim_date_val.strftime("%d-%m-%Y")
+        # Input for the date of claim
+        benefit_claim_date_val = st.date_input("From what date has the above claim been in effect?", format='DD/MM/YYYY')
+        benefit_claim_date_val = benefit_claim_date_val.strftime("%d-%m-%Y")
 
 
 
