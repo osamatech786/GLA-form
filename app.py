@@ -1352,7 +1352,7 @@ def app():
     ]
 
     # Change from selectbox to multiselect
-    selected_levels = st.multiselect(
+    selected_levels = st.selectbox(
         'Select the highest level of education at start', education_options)
 
     # mandatory field validation
@@ -2135,3 +2135,5 @@ def progress_bar(duration_seconds):
 
 if __name__ == '__main__':
     app()
+# streamlit run app.py --server.port 8501
+# Dev : https://linkedin.com/in/osamatech786
