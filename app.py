@@ -249,203 +249,206 @@ def app():
 
     # Long term disability, health problem, or learning difficulties
     st.subheader('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
-    disability = st.radio('Choose the correct option:', ['Y', 'N'], index=0)
+    disability = st.radio('Choose the correct option:', ['N', 'Y'], index=0)
     # Initialize variables for disability options
     has_disability, no_disability = '', ''
     # Set variables based on user selection
     if disability == 'Y':
         has_disability, no_disability = 'Y', '-'
+
+        # LLDD or Health Problem Types
+        st.subheader('LLDD or Health Problem Type')
+
+        # Initialize variables for each health problem type
+        vision_impairment_primary, vision_impairment_secondary, vision_impairment_tertiary = '-', '-', '-'
+        hearing_impairment_primary, hearing_impairment_secondary, hearing_impairment_tertiary = '-', '-', '-'
+        mobility_impairment_primary, mobility_impairment_secondary, mobility_impairment_tertiary = '-', '-', '-'
+        complex_disabilities_primary, complex_disabilities_secondary, complex_disabilities_tertiary = '-', '-', '-'
+        social_emotional_difficulties_primary, social_emotional_difficulties_secondary, social_emotional_difficulties_tertiary = '-', '-', '-'
+        mental_health_difficulty_primary, mental_health_difficulty_secondary, mental_health_difficulty_tertiary = '-', '-', '-'
+        moderate_learning_difficulty_primary, moderate_learning_difficulty_secondary, moderate_learning_difficulty_tertiary = '-', '-', '-'
+        severe_learning_difficulty_primary, severe_learning_difficulty_secondary, severe_learning_difficulty_tertiary = '-', '-', '-'
+        dyslexia_primary, dyslexia_secondary, dyslexia_tertiary = '-', '-', '-'
+        dyscalculia_primary, dyscalculia_secondary, dyscalculia_tertiary = '-', '-', '-'
+        autism_spectrum_primary, autism_spectrum_secondary, autism_spectrum_tertiary = '-', '-', '-'
+        aspergers_primary, aspergers_secondary, aspergers_tertiary = '-', '-', '-'
+        temporary_disability_primary, temporary_disability_secondary, temporary_disability_tertiary = '-', '-', '-'
+        speech_communication_needs_primary, speech_communication_needs_secondary, speech_communication_needs_tertiary = '-', '-', '-'
+        physical_disability_primary, physical_disability_secondary, physical_disability_tertiary = '-', '-', '-'
+        specific_learning_difficulty_primary, specific_learning_difficulty_secondary, specific_learning_difficulty_tertiary = '-', '-', '-'
+        medical_condition_primary, medical_condition_secondary, medical_condition_tertiary = '-', '-', '-'
+        other_learning_difficulty_primary, other_learning_difficulty_secondary, other_learning_difficulty_tertiary = '-', '-', '-'
+        other_disability_primary, other_disability_secondary, other_disability_tertiary = '-', '-', '-'
+        prefer_not_to_say= '-'
+
+        # Health problem types data
+        data = [
+            ('Vision impairment (4)', 'vision_primary', 'vision_secondary', 'vision_tertiary'),
+            ('Hearing impairment (5)', 'hearing_primary', 'hearing_secondary', 'hearing_tertiary'),
+            ('Disability affecting mobility (6)', 'mobility_primary', 'mobility_secondary', 'mobility_tertiary'),
+            ('Profound complex disabilities (7)', 'complex_primary', 'complex_secondary', 'complex_tertiary'),
+            ('Social and emotional difficulties (8)', 'social_primary', 'social_secondary', 'social_tertiary'),
+            ('Mental health difficulty (9)', 'mental_primary', 'mental_secondary', 'mental_tertiary'),
+            ('Moderate learning difficulty (10)', 'moderate_primary', 'moderate_secondary', 'moderate_tertiary'),
+            ('Severe learning difficulty (11)', 'severe_primary', 'severe_secondary', 'severe_tertiary'),
+            ('Dyslexia (12)', 'dyslexia_primary', 'dyslexia_secondary', 'dyslexia_tertiary'),
+            ('Dyscalculia (13)', 'dyscalculia_primary', 'dyscalculia_secondary', 'dyscalculia_tertiary'),
+            ('Autism spectrum disorder (14)', 'autism_primary', 'autism_secondary', 'autism_tertiary'),
+            ('Asperger\'s syndrome (15)', 'aspergers_primary', 'aspergers_secondary', 'aspergers_tertiary'),
+            ('Temporary disability after illness (for example post-viral) or accident (16)', 'temporary_primary', 'temporary_secondary', 'temporary_tertiary'),
+            ('Speech, Language and Communication Needs (17)', 'speech_primary', 'speech_secondary', 'speech_tertiary'),
+            ('Other physical disability (18)', 'physical_primary', 'physical_secondary', 'physical_tertiary'),
+            ('Other specific learning difficulty (e.g. Dyspraxia) (19)', 'specific_primary', 'specific_secondary', 'specific_tertiary'),
+            ('Other medical condition (for example epilepsy, asthma, diabetes) (20)', 'medical_primary', 'medical_secondary', 'medical_tertiary'),
+            ('Other learning difficulty (90)', 'other_learning_primary', 'other_learning_secondary', 'other_learning_tertiary'),
+            ('Other disability (97)', 'other_disability_primary', 'other_disability_secondary', 'other_disability_tertiary'),
+            ('Prefer not to say (98)', 'prefer_not_to_say', '', '')
+        ]
+
+        # Starting placeholder index
+        placeholder_index = 157
+
+        # Create checkboxes and map them to variables explicitly
+        for label, primary, secondary, tertiary in data:
+            st.write(f'**{label}**')
+            
+            # Create checkboxes
+            primary_checked = st.checkbox('Primary', key=primary)
+            secondary_checked = st.checkbox('Secondary', key=secondary) if secondary else False
+            tertiary_checked = st.checkbox('Tertiary', key=tertiary) if tertiary else False
+
+            # Set variables based on selections
+            if primary_checked:
+                if 'vision' in primary:
+                    vision_impairment_primary = 'X'
+                elif 'hearing' in primary:
+                    hearing_impairment_primary = 'X'
+                elif 'mobility' in primary:
+                    mobility_impairment_primary = 'X'
+                elif 'complex' in primary:
+                    complex_disabilities_primary = 'X'
+                elif 'social' in primary:
+                    social_emotional_difficulties_primary = 'X'
+                elif 'mental' in primary:
+                    mental_health_difficulty_primary = 'X'
+                elif 'moderate' in primary:
+                    moderate_learning_difficulty_primary = 'X'
+                elif 'severe' in primary:
+                    severe_learning_difficulty_primary = 'X'
+                elif 'dyslexia' in primary:
+                    dyslexia_primary = 'X'
+                elif 'dyscalculia' in primary:
+                    dyscalculia_primary = 'X'
+                elif 'autism' in primary:
+                    autism_spectrum_primary = 'X'
+                elif 'asperger' in primary:
+                    aspergers_primary = 'X'
+                elif 'temporary' in primary:
+                    temporary_disability_primary = 'X'
+                elif 'speech' in primary:
+                    speech_communication_needs_primary = 'X'
+                elif 'physical' in primary:
+                    physical_disability_primary = 'X'
+                elif 'specific' in primary:
+                    specific_learning_difficulty_primary = 'X'
+                elif 'medical' in primary:
+                    medical_condition_primary = 'X'
+                elif 'other_learning' in primary:
+                    other_learning_difficulty_primary = 'X'
+                elif 'other_disability' in primary:
+                    other_disability_primary = 'X'
+                elif 'prefer_not' in primary:
+                            prefer_not_to_say = 'X'
+
+            if secondary_checked:
+                if 'vision' in secondary:
+                    vision_impairment_secondary = 'X'
+                elif 'hearing' in secondary:
+                    hearing_impairment_secondary = 'X'
+                elif 'mobility' in secondary:
+                    mobility_impairment_secondary = 'X'
+                elif 'complex' in secondary:
+                    complex_disabilities_secondary = 'X'
+                elif 'social' in secondary:
+                    social_emotional_difficulties_secondary = 'X'
+                elif 'mental' in secondary:
+                    mental_health_difficulty_secondary = 'X'
+                elif 'moderate' in secondary:
+                    moderate_learning_difficulty_secondary = 'X'
+                elif 'severe' in secondary:
+                    severe_learning_difficulty_secondary = 'X'
+                elif 'dyslexia' in secondary:
+                    dyslexia_secondary = 'X'
+                elif 'dyscalculia' in secondary:
+                    dyscalculia_secondary = 'X'
+                elif 'autism' in secondary:
+                    autism_spectrum_secondary = 'X'
+                elif 'asperger' in secondary:
+                    aspergers_secondary = 'X'
+                elif 'temporary' in secondary:
+                    temporary_disability_secondary = 'X'
+                elif 'speech' in secondary:
+                    speech_communication_needs_secondary = 'X'
+                elif 'physical' in secondary:
+                    physical_disability_secondary = 'X'
+                elif 'specific' in secondary:
+                    specific_learning_difficulty_secondary = 'X'
+                elif 'medical' in secondary:
+                    medical_condition_secondary = 'X'
+                elif 'other_learning' in secondary:
+                    other_learning_difficulty_secondary = 'X'
+                elif 'other_disability' in secondary:
+                    other_disability_secondary = 'X'
+
+            if tertiary_checked:
+                if 'vision' in tertiary:
+                    vision_impairment_tertiary = 'X'
+                elif 'hearing' in tertiary:
+                    hearing_impairment_tertiary = 'X'
+                elif 'mobility' in tertiary:
+                    mobility_impairment_tertiary = 'X'
+                elif 'complex' in tertiary:
+                    complex_disabilities_tertiary = 'X'
+                elif 'social' in tertiary:
+                    social_emotional_difficulties_tertiary = 'X'
+                elif 'mental' in tertiary:
+                    mental_health_difficulty_tertiary = 'X'
+                elif 'moderate' in tertiary:
+                    moderate_learning_difficulty_tertiary = 'X'
+                elif 'severe' in tertiary:
+                    severe_learning_difficulty_tertiary = 'X'
+                elif 'dyslexia' in tertiary:
+                    dyslexia_tertiary = 'X'
+                elif 'dyscalculia' in tertiary:
+                    dyscalculia_tertiary = 'X'
+                elif 'autism' in tertiary:
+                    autism_spectrum_tertiary = 'X'
+                elif 'asperger' in tertiary:
+                    aspergers_tertiary = 'X'
+                elif 'temporary' in tertiary:
+                    temporary_disability_tertiary = 'X'
+                elif 'speech' in tertiary:
+                    speech_communication_needs_tertiary = 'X'
+                elif 'physical' in tertiary:
+                    physical_disability_tertiary = 'X'
+                elif 'specific' in tertiary:
+                    specific_learning_difficulty_tertiary = 'X'
+                elif 'medical' in tertiary:
+                    medical_condition_tertiary = 'X'
+                elif 'other_learning' in tertiary:
+                    other_learning_difficulty_tertiary = 'X'
+                elif 'other_disability' in tertiary:
+                    other_disability_tertiary = 'X'
+
+
+        # Additional information that may impact learning
+        additional_info = st.text_area('Is there any other additional information that may impact on your ability to learn?')
+
+
     else:
         has_disability, no_disability = '-', 'N'
 
-    # LLDD or Health Problem Types
-    st.subheader('LLDD or Health Problem Type')
-
-    # Initialize variables for each health problem type
-    vision_impairment_primary, vision_impairment_secondary, vision_impairment_tertiary = '-', '-', '-'
-    hearing_impairment_primary, hearing_impairment_secondary, hearing_impairment_tertiary = '-', '-', '-'
-    mobility_impairment_primary, mobility_impairment_secondary, mobility_impairment_tertiary = '-', '-', '-'
-    complex_disabilities_primary, complex_disabilities_secondary, complex_disabilities_tertiary = '-', '-', '-'
-    social_emotional_difficulties_primary, social_emotional_difficulties_secondary, social_emotional_difficulties_tertiary = '-', '-', '-'
-    mental_health_difficulty_primary, mental_health_difficulty_secondary, mental_health_difficulty_tertiary = '-', '-', '-'
-    moderate_learning_difficulty_primary, moderate_learning_difficulty_secondary, moderate_learning_difficulty_tertiary = '-', '-', '-'
-    severe_learning_difficulty_primary, severe_learning_difficulty_secondary, severe_learning_difficulty_tertiary = '-', '-', '-'
-    dyslexia_primary, dyslexia_secondary, dyslexia_tertiary = '-', '-', '-'
-    dyscalculia_primary, dyscalculia_secondary, dyscalculia_tertiary = '-', '-', '-'
-    autism_spectrum_primary, autism_spectrum_secondary, autism_spectrum_tertiary = '-', '-', '-'
-    aspergers_primary, aspergers_secondary, aspergers_tertiary = '-', '-', '-'
-    temporary_disability_primary, temporary_disability_secondary, temporary_disability_tertiary = '-', '-', '-'
-    speech_communication_needs_primary, speech_communication_needs_secondary, speech_communication_needs_tertiary = '-', '-', '-'
-    physical_disability_primary, physical_disability_secondary, physical_disability_tertiary = '-', '-', '-'
-    specific_learning_difficulty_primary, specific_learning_difficulty_secondary, specific_learning_difficulty_tertiary = '-', '-', '-'
-    medical_condition_primary, medical_condition_secondary, medical_condition_tertiary = '-', '-', '-'
-    other_learning_difficulty_primary, other_learning_difficulty_secondary, other_learning_difficulty_tertiary = '-', '-', '-'
-    other_disability_primary, other_disability_secondary, other_disability_tertiary = '-', '-', '-'
-    prefer_not_to_say= '-'
-
-    # Health problem types data
-    data = [
-        ('Vision impairment (4)', 'vision_primary', 'vision_secondary', 'vision_tertiary'),
-        ('Hearing impairment (5)', 'hearing_primary', 'hearing_secondary', 'hearing_tertiary'),
-        ('Disability affecting mobility (6)', 'mobility_primary', 'mobility_secondary', 'mobility_tertiary'),
-        ('Profound complex disabilities (7)', 'complex_primary', 'complex_secondary', 'complex_tertiary'),
-        ('Social and emotional difficulties (8)', 'social_primary', 'social_secondary', 'social_tertiary'),
-        ('Mental health difficulty (9)', 'mental_primary', 'mental_secondary', 'mental_tertiary'),
-        ('Moderate learning difficulty (10)', 'moderate_primary', 'moderate_secondary', 'moderate_tertiary'),
-        ('Severe learning difficulty (11)', 'severe_primary', 'severe_secondary', 'severe_tertiary'),
-        ('Dyslexia (12)', 'dyslexia_primary', 'dyslexia_secondary', 'dyslexia_tertiary'),
-        ('Dyscalculia (13)', 'dyscalculia_primary', 'dyscalculia_secondary', 'dyscalculia_tertiary'),
-        ('Autism spectrum disorder (14)', 'autism_primary', 'autism_secondary', 'autism_tertiary'),
-        ('Asperger\'s syndrome (15)', 'aspergers_primary', 'aspergers_secondary', 'aspergers_tertiary'),
-        ('Temporary disability after illness (for example post-viral) or accident (16)', 'temporary_primary', 'temporary_secondary', 'temporary_tertiary'),
-        ('Speech, Language and Communication Needs (17)', 'speech_primary', 'speech_secondary', 'speech_tertiary'),
-        ('Other physical disability (18)', 'physical_primary', 'physical_secondary', 'physical_tertiary'),
-        ('Other specific learning difficulty (e.g. Dyspraxia) (19)', 'specific_primary', 'specific_secondary', 'specific_tertiary'),
-        ('Other medical condition (for example epilepsy, asthma, diabetes) (20)', 'medical_primary', 'medical_secondary', 'medical_tertiary'),
-        ('Other learning difficulty (90)', 'other_learning_primary', 'other_learning_secondary', 'other_learning_tertiary'),
-        ('Other disability (97)', 'other_disability_primary', 'other_disability_secondary', 'other_disability_tertiary'),
-        ('Prefer not to say (98)', 'prefer_not_to_say', '', '')
-    ]
-
-    # Starting placeholder index
-    placeholder_index = 157
-
-    # Create checkboxes and map them to variables explicitly
-    for label, primary, secondary, tertiary in data:
-        st.write(f'**{label}**')
-        
-        # Create checkboxes
-        primary_checked = st.checkbox('Primary', key=primary)
-        secondary_checked = st.checkbox('Secondary', key=secondary) if secondary else False
-        tertiary_checked = st.checkbox('Tertiary', key=tertiary) if tertiary else False
-
-        # Set variables based on selections
-        if primary_checked:
-            if 'vision' in primary:
-                vision_impairment_primary = 'X'
-            elif 'hearing' in primary:
-                hearing_impairment_primary = 'X'
-            elif 'mobility' in primary:
-                mobility_impairment_primary = 'X'
-            elif 'complex' in primary:
-                complex_disabilities_primary = 'X'
-            elif 'social' in primary:
-                social_emotional_difficulties_primary = 'X'
-            elif 'mental' in primary:
-                mental_health_difficulty_primary = 'X'
-            elif 'moderate' in primary:
-                moderate_learning_difficulty_primary = 'X'
-            elif 'severe' in primary:
-                severe_learning_difficulty_primary = 'X'
-            elif 'dyslexia' in primary:
-                dyslexia_primary = 'X'
-            elif 'dyscalculia' in primary:
-                dyscalculia_primary = 'X'
-            elif 'autism' in primary:
-                autism_spectrum_primary = 'X'
-            elif 'asperger' in primary:
-                aspergers_primary = 'X'
-            elif 'temporary' in primary:
-                temporary_disability_primary = 'X'
-            elif 'speech' in primary:
-                speech_communication_needs_primary = 'X'
-            elif 'physical' in primary:
-                physical_disability_primary = 'X'
-            elif 'specific' in primary:
-                specific_learning_difficulty_primary = 'X'
-            elif 'medical' in primary:
-                medical_condition_primary = 'X'
-            elif 'other_learning' in primary:
-                other_learning_difficulty_primary = 'X'
-            elif 'other_disability' in primary:
-                other_disability_primary = 'X'
-            elif 'prefer_not' in primary:
-                        prefer_not_to_say = 'X'
-
-        if secondary_checked:
-            if 'vision' in secondary:
-                vision_impairment_secondary = 'X'
-            elif 'hearing' in secondary:
-                hearing_impairment_secondary = 'X'
-            elif 'mobility' in secondary:
-                mobility_impairment_secondary = 'X'
-            elif 'complex' in secondary:
-                complex_disabilities_secondary = 'X'
-            elif 'social' in secondary:
-                social_emotional_difficulties_secondary = 'X'
-            elif 'mental' in secondary:
-                mental_health_difficulty_secondary = 'X'
-            elif 'moderate' in secondary:
-                moderate_learning_difficulty_secondary = 'X'
-            elif 'severe' in secondary:
-                severe_learning_difficulty_secondary = 'X'
-            elif 'dyslexia' in secondary:
-                dyslexia_secondary = 'X'
-            elif 'dyscalculia' in secondary:
-                dyscalculia_secondary = 'X'
-            elif 'autism' in secondary:
-                autism_spectrum_secondary = 'X'
-            elif 'asperger' in secondary:
-                aspergers_secondary = 'X'
-            elif 'temporary' in secondary:
-                temporary_disability_secondary = 'X'
-            elif 'speech' in secondary:
-                speech_communication_needs_secondary = 'X'
-            elif 'physical' in secondary:
-                physical_disability_secondary = 'X'
-            elif 'specific' in secondary:
-                specific_learning_difficulty_secondary = 'X'
-            elif 'medical' in secondary:
-                medical_condition_secondary = 'X'
-            elif 'other_learning' in secondary:
-                other_learning_difficulty_secondary = 'X'
-            elif 'other_disability' in secondary:
-                other_disability_secondary = 'X'
-
-        if tertiary_checked:
-            if 'vision' in tertiary:
-                vision_impairment_tertiary = 'X'
-            elif 'hearing' in tertiary:
-                hearing_impairment_tertiary = 'X'
-            elif 'mobility' in tertiary:
-                mobility_impairment_tertiary = 'X'
-            elif 'complex' in tertiary:
-                complex_disabilities_tertiary = 'X'
-            elif 'social' in tertiary:
-                social_emotional_difficulties_tertiary = 'X'
-            elif 'mental' in tertiary:
-                mental_health_difficulty_tertiary = 'X'
-            elif 'moderate' in tertiary:
-                moderate_learning_difficulty_tertiary = 'X'
-            elif 'severe' in tertiary:
-                severe_learning_difficulty_tertiary = 'X'
-            elif 'dyslexia' in tertiary:
-                dyslexia_tertiary = 'X'
-            elif 'dyscalculia' in tertiary:
-                dyscalculia_tertiary = 'X'
-            elif 'autism' in tertiary:
-                autism_spectrum_tertiary = 'X'
-            elif 'asperger' in tertiary:
-                aspergers_tertiary = 'X'
-            elif 'temporary' in tertiary:
-                temporary_disability_tertiary = 'X'
-            elif 'speech' in tertiary:
-                speech_communication_needs_tertiary = 'X'
-            elif 'physical' in tertiary:
-                physical_disability_tertiary = 'X'
-            elif 'specific' in tertiary:
-                specific_learning_difficulty_tertiary = 'X'
-            elif 'medical' in tertiary:
-                medical_condition_tertiary = 'X'
-            elif 'other_learning' in tertiary:
-                other_learning_difficulty_tertiary = 'X'
-            elif 'other_disability' in tertiary:
-                other_disability_tertiary = 'X'
-
-
-    # Additional information that may impact learning
-    additional_info = st.text_area('Is there any other additional information that may impact on your ability to learn?')
-
+    
     # Other disadvantaged sections
     st.subheader('Other disadvantaged - Ex Offender?')
     ex_offender = st.radio('', ['Y', 'N', 'Choose not to say'], key='ex_offender')
