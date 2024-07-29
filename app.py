@@ -810,6 +810,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Full UK Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         elif selected_option_nationality == options[1]:
             full_uk_passport, full_eu_passport, national_identity_card = '', 'X', ''
@@ -817,6 +820,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Full EU Member Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         elif selected_option_nationality == options[2]:
             full_uk_passport, full_eu_passport, national_identity_card = '', '', 'X'
@@ -824,6 +830,9 @@ def app():
             uploaded_file = st.file_uploader("Upload National Identity Card (EU)", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         if selected_option_nationality in [options[1], options[2]]:
             st.text(
@@ -842,6 +851,9 @@ def app():
                 uploaded_file = st.file_uploader("https://www.gov.uk/check-immigration-status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
                 if uploaded_file is not None:
                     files.append(uploaded_file)
+                uploaded_file_3 = st.file_uploader("Optional - Upload Back Side of Document ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file_3 is not None:
+                    files.append(uploaded_file_3)
 
             elif settled_status == conditions[1]:
                 hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', 'X', ''
@@ -849,6 +861,9 @@ def app():
                 uploaded_file = st.file_uploader("https://www.gov.uk/check-immigration-status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
                 if uploaded_file is not None:
                     files.append(uploaded_file)
+                uploaded_file_3 = st.file_uploader("Optional - Upload Back Side of Document  ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file_3 is not None:
+                    files.append(uploaded_file_3)
 
             elif settled_status == conditions[2]:
                 hold_settled_status, hold_pre_settled_status, hold_leave_to_remain = '', '', 'X'
@@ -856,6 +871,9 @@ def app():
                 uploaded_file = st.file_uploader("https://www.gov.uk/check-immigration-status", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
                 if uploaded_file is not None:
                     files.append(uploaded_file)
+                uploaded_file_3 = st.file_uploader("Optional - Upload Back Side of Document   ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+                if uploaded_file_3 is not None:
+                    files.append(uploaded_file_3)
 
     else:
         not_nationality = st.text_input('Nationality ')
@@ -868,6 +886,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Non-EU Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
         else:
             passport_non_eu = ''
 
@@ -886,6 +907,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Letter from UK Immigration and Nationality Directorate", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         elif document_type == document_options[1]:
             letter_uk_immigration, passport_endorsed, identity_card = '', 'X', ''
@@ -893,6 +917,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Endorsed Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         elif document_type == document_options[2]:
             letter_uk_immigration, passport_endorsed, identity_card = '', '', 'X'
@@ -900,6 +927,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Identity Card (Biometric Permit)", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
+            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_2 is not None:
+                files.append(uploaded_file_2)
 
         country_of_issue = st.text_input('Country of issue')
         id_document_reference_number = st.text_input('ID Document Reference Number')
@@ -2093,6 +2123,9 @@ def add_checkbox_with_upload(label, key_prefix):
         uploaded_file = st.file_uploader(f"Upload {label}", type=['pdf', 'jpg', 'jpeg', 'png', 'docx'], key=f"{key_prefix}_uploader")
         if uploaded_file is not None:
             files.append(uploaded_file)
+        uploaded_file_1 = st.file_uploader(f"Optional - Upload Back Side of The Document", type=['pdf', 'jpg', 'jpeg', 'png', 'docx'], key=f"{key_prefix}_uploader_1")
+        if uploaded_file_1 is not None:
+            files.append(uploaded_file_1)
         return 'X'
     else:
         return '-'
