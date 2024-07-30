@@ -252,6 +252,31 @@ def app():
     disability = st.radio('Choose the correct option:', ['N', 'Y'], index=0)
     # Initialize variables for disability options
     has_disability, no_disability = '', ''
+    
+    # initilize first to overcome error:
+    # Initialize variables for each health problem type
+    vision_impairment_primary, vision_impairment_secondary, vision_impairment_tertiary = '-', '-', '-'
+    hearing_impairment_primary, hearing_impairment_secondary, hearing_impairment_tertiary = '-', '-', '-'
+    mobility_impairment_primary, mobility_impairment_secondary, mobility_impairment_tertiary = '-', '-', '-'
+    complex_disabilities_primary, complex_disabilities_secondary, complex_disabilities_tertiary = '-', '-', '-'
+    social_emotional_difficulties_primary, social_emotional_difficulties_secondary, social_emotional_difficulties_tertiary = '-', '-', '-'
+    mental_health_difficulty_primary, mental_health_difficulty_secondary, mental_health_difficulty_tertiary = '-', '-', '-'
+    moderate_learning_difficulty_primary, moderate_learning_difficulty_secondary, moderate_learning_difficulty_tertiary = '-', '-', '-'
+    severe_learning_difficulty_primary, severe_learning_difficulty_secondary, severe_learning_difficulty_tertiary = '-', '-', '-'
+    dyslexia_primary, dyslexia_secondary, dyslexia_tertiary = '-', '-', '-'
+    dyscalculia_primary, dyscalculia_secondary, dyscalculia_tertiary = '-', '-', '-'
+    autism_spectrum_primary, autism_spectrum_secondary, autism_spectrum_tertiary = '-', '-', '-'
+    aspergers_primary, aspergers_secondary, aspergers_tertiary = '-', '-', '-'
+    temporary_disability_primary, temporary_disability_secondary, temporary_disability_tertiary = '-', '-', '-'
+    speech_communication_needs_primary, speech_communication_needs_secondary, speech_communication_needs_tertiary = '-', '-', '-'
+    physical_disability_primary, physical_disability_secondary, physical_disability_tertiary = '-', '-', '-'
+    specific_learning_difficulty_primary, specific_learning_difficulty_secondary, specific_learning_difficulty_tertiary = '-', '-', '-'
+    medical_condition_primary, medical_condition_secondary, medical_condition_tertiary = '-', '-', '-'
+    other_learning_difficulty_primary, other_learning_difficulty_secondary, other_learning_difficulty_tertiary = '-', '-', '-'
+    other_disability_primary, other_disability_secondary, other_disability_tertiary = '-', '-', '-'
+    prefer_not_to_say= '-'
+    additional_info=''
+
     # Set variables based on user selection
     if disability == 'Y':
         has_disability, no_disability = 'Y', '-'
@@ -259,27 +284,7 @@ def app():
         # LLDD or Health Problem Types
         st.subheader('LLDD or Health Problem Type')
 
-        # Initialize variables for each health problem type
-        vision_impairment_primary, vision_impairment_secondary, vision_impairment_tertiary = '-', '-', '-'
-        hearing_impairment_primary, hearing_impairment_secondary, hearing_impairment_tertiary = '-', '-', '-'
-        mobility_impairment_primary, mobility_impairment_secondary, mobility_impairment_tertiary = '-', '-', '-'
-        complex_disabilities_primary, complex_disabilities_secondary, complex_disabilities_tertiary = '-', '-', '-'
-        social_emotional_difficulties_primary, social_emotional_difficulties_secondary, social_emotional_difficulties_tertiary = '-', '-', '-'
-        mental_health_difficulty_primary, mental_health_difficulty_secondary, mental_health_difficulty_tertiary = '-', '-', '-'
-        moderate_learning_difficulty_primary, moderate_learning_difficulty_secondary, moderate_learning_difficulty_tertiary = '-', '-', '-'
-        severe_learning_difficulty_primary, severe_learning_difficulty_secondary, severe_learning_difficulty_tertiary = '-', '-', '-'
-        dyslexia_primary, dyslexia_secondary, dyslexia_tertiary = '-', '-', '-'
-        dyscalculia_primary, dyscalculia_secondary, dyscalculia_tertiary = '-', '-', '-'
-        autism_spectrum_primary, autism_spectrum_secondary, autism_spectrum_tertiary = '-', '-', '-'
-        aspergers_primary, aspergers_secondary, aspergers_tertiary = '-', '-', '-'
-        temporary_disability_primary, temporary_disability_secondary, temporary_disability_tertiary = '-', '-', '-'
-        speech_communication_needs_primary, speech_communication_needs_secondary, speech_communication_needs_tertiary = '-', '-', '-'
-        physical_disability_primary, physical_disability_secondary, physical_disability_tertiary = '-', '-', '-'
-        specific_learning_difficulty_primary, specific_learning_difficulty_secondary, specific_learning_difficulty_tertiary = '-', '-', '-'
-        medical_condition_primary, medical_condition_secondary, medical_condition_tertiary = '-', '-', '-'
-        other_learning_difficulty_primary, other_learning_difficulty_secondary, other_learning_difficulty_tertiary = '-', '-', '-'
-        other_disability_primary, other_disability_secondary, other_disability_tertiary = '-', '-', '-'
-        prefer_not_to_say= '-'
+        
 
         # Health problem types data
         data = [
@@ -533,7 +538,7 @@ def app():
         jobcentre_plus_val == 'X' and
         len(specify_refereel)>0):
         referrall = 'filled'
-        # st.write('LENGTH:', len(specify_refereel))
+        st.write('LENGTH:', len(specify_refereel))
     # mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
@@ -1882,7 +1887,7 @@ def app():
         missing_fields = validate_inputs(placeholder_values, mandatory_fields)  # get the list of missing mandatory inputs
         if missing_fields:
             st.warning(f"Please fill out all the fields.")
-            st.text('Error Code:', missing_fields)
+            st.text(f'Error Code: {missing_fields}')
             # st.text('LENGTH:', len(specify_refereel))
             
         else:   
