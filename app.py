@@ -915,9 +915,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Letter from UK Immigration and Nationality Directorate", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
-            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
-            if uploaded_file_2 is not None:
-                files.append(uploaded_file_2)
+            uploaded_file_4 = st.file_uploader("Optional - Upload Back Side of Document ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_4 is not None:
+                files.append(uploaded_file_4)
 
         elif document_type == document_options[1]:
             letter_uk_immigration, passport_endorsed, identity_card = '', 'X', ''
@@ -925,9 +925,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Endorsed Passport", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
-            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
-            if uploaded_file_2 is not None:
-                files.append(uploaded_file_2)
+            uploaded_file_4 = st.file_uploader("Optional - Upload Back Side of Document  ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_4 is not None:
+                files.append(uploaded_file_4)
 
         elif document_type == document_options[2]:
             letter_uk_immigration, passport_endorsed, identity_card = '', '', 'X'
@@ -935,9 +935,9 @@ def app():
             uploaded_file = st.file_uploader("Upload Identity Card (Biometric Permit)", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
             if uploaded_file is not None:
                 files.append(uploaded_file)
-            uploaded_file_2 = st.file_uploader("Optional - Upload Back Side of Document", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
-            if uploaded_file_2 is not None:
-                files.append(uploaded_file_2)
+            uploaded_file_4 = st.file_uploader("Optional - Upload Back Side of Document   ", type=['docx', 'pdf', 'jpg', 'jpeg', 'png'])
+            if uploaded_file_4 is not None:
+                files.append(uploaded_file_4)
 
         country_of_issue = st.text_input('Country of issue')
         id_document_reference_number = st.text_input('ID Document Reference Number')
