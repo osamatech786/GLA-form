@@ -539,7 +539,7 @@ def app():
         len(specify_refereel)>0):
         referrall = 'filled'
         st.write('LENGTH:', len(specify_refereel))
-    # mandatory_fields.extend(['p304'])
+    mandatory_fields.extend(['p304'])
    
     # Employment and Monitoring Information Section
     st.header('Employment and Monitoring Information')
@@ -1920,7 +1920,7 @@ def app():
                 receiver_email = sender_email
                 # receiver_email = 'mohamedr@prevista.co.uk'
                 
-                subject = f"GLA Form Submission: {first_name} {middle_name} {family_name} {date.today()} {specify_refereel}"
+                subject = f"GLA: {first_name} {middle_name} {family_name} {date.today()} {specify_refereel}"
 
                 body = "GLA Form submitted. Please find attached files."
 
