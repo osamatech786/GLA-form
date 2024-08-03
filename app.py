@@ -996,11 +996,11 @@ def app():
         format='DD/MM/YYYY'
     )
 
-    # Check if the selected date is within the last three months
-    if e02_date_of_issue < three_months_ago:
-        st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
-        st.stop()
-    st.success("The date of issue is within the last 3 months.")
+    # # Check if the selected date is within the last three months
+    # if e02_date_of_issue < three_months_ago:
+    #     st.warning("The date of issue is not within the last 3 months. Please select a valid date.")
+    #     st.stop()
+    # st.success("The date of issue is within the last 3 months.")
     
     e02_date_of_issue = e02_date_of_issue.strftime("%d-%m-%Y")
 
