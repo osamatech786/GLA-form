@@ -28,16 +28,6 @@ def app():
         initial_sidebar_state="collapsed",
     )
 
-    # Custom CSS to set a light background color
-    st.markdown("""
-        <style>
-        body {
-            background-color: #f0f0f0; /* Light grey background */
-        }
-        </style>
-        """,
-                unsafe_allow_html=True)
-
     st.image('header/header-GLA.png', use_column_width=True)
 
     global mandatory_fields
