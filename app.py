@@ -33,6 +33,19 @@ def app():
     global mandatory_fields
 
     st.title('Welcome')
+    
+    # Add question with a dropdown menu
+    support_options = [
+    "Catalyst", "Futures", "Innovators", "Alphabets", "Winners", 
+    "Ealing Job Centre", "Ealing Council", "Brent Council", 
+    "Brent JCP", "Tower Hamlets JCP", "Tower Hamlets Council", 
+    "Oxfordshire JCP", "Surrey JCPs"
+]
+    selected_option = st.selectbox(
+    "Who is supporting you to fill this form?", 
+    support_options
+)
+
     st.subheader('Please fill out the following details:')
 
     title_mr, title_mrs, title_miss, title_ms='','','',''
@@ -1910,7 +1923,7 @@ def app():
                 receiver_email = sender_email
                 # receiver_email = 'mohamedr@prevista.co.uk'
                 
-                subject = f"GLA: {first_name} {middle_name} {family_name} {date.today()} {specify_refereel}"
+                subject = f"GLA: {selected_option} {first_name} {middle_name} {family_name} {date.today()} {specify_refereel}"
 
                 body = "GLA Form submitted. Please find attached files."
 
@@ -2166,5 +2179,6 @@ def progress_bar(duration_seconds):
 
 if __name__ == '__main__':
     app()
+
 # streamlit run app.py --server.port 8501
 # Dev : https://linkedin.com/in/osamatech786
