@@ -970,7 +970,7 @@ def app():
         
 
 
-    st.header('E02: Proof of Age (* all documents must be in date and if a letter is used, it must be within the last 3 months)')
+    st.header('E02: Proof of Age')
 
     full_passport_eu = add_checkbox_with_upload('Full Passport (EU Member State)', 'full_passport_eu')
     national_id_card_eu = add_checkbox_with_upload('National ID Card (EU)', 'national_id_card_eu')
