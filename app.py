@@ -251,7 +251,7 @@ def app():
     st.header('LLDD, Health Problems, Other Disadvantaged')
 
     # Long term disability, health problem, or learning difficulties
-    st.subheader('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
+    st.write('Do you consider yourself to have a long term disability, health problem or any learning difficulties? Choose the correct option. If Yes enter code in Primary LLDD or HP; you can add multiple LLDD or HP but primary must be recorded if Yes selected.')
     disability = st.radio('Choose the correct option:', ['N', 'Y'], index=0)
     # Initialize variables for disability options
     has_disability, no_disability = '', ''
@@ -458,8 +458,8 @@ def app():
 
     
     # Other disadvantaged sections
-    st.subheader('Other disadvantaged - Ex Offender?')
-    ex_offender = st.radio('', ['Y', 'N', 'Choose not to say'], key='ex_offender')
+    st.subheader('Other disadvantaged')
+    ex_offender = st.radio('Ex Offender?', ['Y', 'N', 'Choose not to say'], key='ex_offender')
     # Initialize ex_offender variables
     ex_offender_y, ex_offender_n, ex_offender_choose_not_to_say = '', '', ''
     # Conditional input for ex_offender option
@@ -470,9 +470,7 @@ def app():
     elif ex_offender == "Choose not to say":
         ex_offender_choose_not_to_say = 'Choose not to say'
     
-
-    st.subheader('Other disadvantaged - Homeless?')
-    homeless = st.radio('', ['Y', 'N', 'Choose not to say'], key='homeless')
+    homeless = st.radio('Homeless?', ['Y', 'N', 'Choose not to say'], key='homeless')
     # Initialize homeless variables
     homeless_y, homeless_n, homeless_choose_not_to_say = '', '', ''
     # Conditional input for homeless option
@@ -483,7 +481,7 @@ def app():
     elif homeless == "Choose not to say":
         homeless_choose_not_to_say = 'Choose not to say'
 
-
+        
     # Referral Source Section
     st.header('Referral Source')
     # Creating columns for referral source options
