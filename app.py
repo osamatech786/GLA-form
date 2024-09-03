@@ -36,7 +36,7 @@ def app():
     
     # Add question with a dropdown menu
     support_options = [
-    "Catalyst", "Futures", "Innovators", "Alphabets", "Winners", 
+    "    ", "Catalyst", "Futures", "Innovators", "Alphabets", "Winners", 
     "Ealing Job Centre", "Ealing Council", "Brent Council", 
     "Brent JCP", "Tower Hamlets JCP", "Tower Hamlets Council", 
     "Oxfordshire JCP", "Surrey JCPs"
@@ -1865,7 +1865,11 @@ def app():
             template_file = "ph_gla_v3.docx"
             modified_file = f"GLA_Form_Submission_{first_name}_{middle_name}_{family_name}.docx"
 
-            if len(participant_signature.json_data['objects']) != 0:
+            if selected_option == "    ":
+                st.warning("Please first select 'Support Option' which is in the beginning of the form.")
+            elif len(participant_signature.json_data['objects']) == 0:
+                st.warning("Please draw your signature.")
+            else:
                 # Convert the drawing to a PIL image and save it
                 signature_path = 'signature_image.png'
                 signature_image = PILImage.fromarray(
@@ -1904,9 +1908,6 @@ def app():
                 else:
                     st.warning("Please upload at least one file or specify a local file.")
         
-            else:
-                st.warning("Please draw your signature.")
-
 
 #  Custome Functions 
 # ####################################################################################################################################
