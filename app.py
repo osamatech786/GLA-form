@@ -128,51 +128,20 @@ def app():
         }
     }
 
+    # Select ethnicity category and ethnicity
     ethnicity_category = st.selectbox('Select Ethnicity Category', list(ethnicity_options.keys()))
     ethnicity = st.selectbox('Select Ethnicity', list(ethnicity_options[ethnicity_category].keys()))
-    ethnicity_code = ethnicity_options[ethnicity_category][ethnicity]
+
+    # Retrieve and convert ethnicity code to integer
+    ethnicity_code_str = ethnicity_options[ethnicity_category][ethnicity]
+    ethnicity_code = int(ethnicity_code_str)  # Ensure it is an integer
     st.write(f'Ethnicity Code: {ethnicity_code}')
 
-    # Initialize ethnicity variables
-    ethnicity_vars = {f'ethnicity_{i}': '' for i in range(31, 48)}
-    ethnicity_48=''
+    ethnicity_vars = {f'ethnicity_{i}': '' for i in range(31, 49)}
+
     # Set the corresponding ethnicity variable to 'X'
-    if ethnicity_code == 31:
-        ethnicity_vars['ethnicity_31'] = 'X'
-    elif ethnicity_code == 32:
-        ethnicity_vars['ethnicity_32'] = 'X'
-    elif ethnicity_code == 33:
-        ethnicity_vars['ethnicity_33'] = 'X'
-    elif ethnicity_code == 34:
-        ethnicity_vars['ethnicity_34'] = 'X'
-    elif ethnicity_code == 35:
-        ethnicity_vars['ethnicity_35'] = 'X'
-    elif ethnicity_code == 36:
-        ethnicity_vars['ethnicity_36'] = 'X'
-    elif ethnicity_code == 37:
-        ethnicity_vars['ethnicity_37'] = 'X'
-    elif ethnicity_code == 38:
-        ethnicity_vars['ethnicity_38'] = 'X'
-    elif ethnicity_code == 39:
-        ethnicity_vars['ethnicity_39'] = 'X'
-    elif ethnicity_code == 40:
-        ethnicity_vars['ethnicity_40'] = 'X'
-    elif ethnicity_code == 41:
-        ethnicity_vars['ethnicity_41'] = 'X'
-    elif ethnicity_code == 42:
-        ethnicity_vars['ethnicity_42'] = 'X'
-    elif ethnicity_code == 43:
-        ethnicity_vars['ethnicity_43'] = 'X'
-    elif ethnicity_code == 44:
-        ethnicity_vars['ethnicity_44'] = 'X'
-    elif ethnicity_code == 45:
-        ethnicity_vars['ethnicity_45'] = 'X'
-    elif ethnicity_code == 46:
-        ethnicity_vars['ethnicity_46'] = 'X'
-    elif ethnicity_code == 47:
-        ethnicity_vars['ethnicity_47'] = 'X'
-    else:
-        ethnicity_48='X'
+    if ethnicity_code in range(31, 49):
+        ethnicity_vars[f'ethnicity_{ethnicity_code}'] = 'X'
 
 
     national_insurance_number = st.text_input("National Insurance Number")
@@ -1614,7 +1583,7 @@ def app():
             'p133': ethnicity_vars['ethnicity_45'],
             'p134': ethnicity_vars['ethnicity_46'],
             'p135': ethnicity_vars['ethnicity_47'],
-            'p136': ethnicity_48,
+            'p136': ethnicity_vars['ethnicity_48'],
             'p137': national_insurance_number,
             'p138': house_no_name_street,
             'p139': suburb_village,
