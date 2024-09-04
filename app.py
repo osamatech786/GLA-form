@@ -124,7 +124,7 @@ def app():
         },
         'Other Ethnic Group': {
             'Arab': '47',
-            'Any other ethnic group': '98'
+            'Any other ethnic group': '48'
         }
     }
 
